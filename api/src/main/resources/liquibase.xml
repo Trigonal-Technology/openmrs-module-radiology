@@ -63,10 +63,10 @@
     <changeSet id="radiology-202410251400" author="dipakthapa">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="radioloy"/>
+                <tableExists tableName="radiology"/>
             </not>
         </preConditions>
-        <createTable tableName="radioloy">
+        <createTable tableName="radiology">
             <column name="radiology_id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -75,6 +75,7 @@
             <column name="radiology_order_id" type="int"/>
             <column name="concept" type="int"/>
             <column name="radiology_order_reason" type="int"/>
+            <column name="modality" type="int"/>
             <column name="category" type="int"/>
             <column name="body_site" type="int"/>
             <column name="part_of" type="int"/>
@@ -104,22 +105,8 @@
             <column name="date_voided" type="datetime"/>
             <column name="void_reason" type="varchar(255)"/>
         </createTable>
-    </changeSet>
-
-    <changeSet id="radiology-202410251500" author="dipakthapa">
-       <preConditions onFail="MARK_RAN">
-        <and>
-            <tableExists tableName="radioloy"/>
-            <not>
-                <columnExists tableName="radioloy" columnName="modality"/>
-            </not>
-        </and>
-    </preConditions>
-        <addColumn tableName="radioloy">
-            <column name="modality" type="int"/>
-        </addColumn>
         <addForeignKeyConstraint constraintName="procedure__modality_fk"
-                                 baseTableName="radioloy" baseColumnNames="modality"
+                                 baseTableName="radiology" baseColumnNames="modality"
                                  referencedTableName="concept" referencedColumnNames="concept_id"/>
     </changeSet>
 
@@ -146,19 +133,16 @@
     </changeSet>
 
     <changeSet  id="radiology-202410251530" author="dipakthapa">
-        <!-- Only run if the concept with the specified UUID does not already exist -->
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <sqlCheck expectedResult="0">
-                    SELECT COUNT(*) FROM order_type WHERE uuid = 'c19c8e82-8b8d-4b4e-b1ff-3f09890b2db3'
-                </sqlCheck>
-            </not>
-        </preConditions>
-
         <insert tableName="order_type">
+            <column name="order_type_id" valueNumeric="10"/>
             <column name="name" value="Radiology Order"/>
             <column name="java_class_name" value="org.openmrs.module.radiology.api.model.RadiologyOrder"/>
             <column name="description" value="Order type for radiology-related diagnostics"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="2024-10-25"/>
+            <column name="retired" valueBoolean="false"/>
+            <column name="date_retired"/>
+            <column name="retire_reason"/>
             <column name="uuid" value="c19c8e82-8b8d-4b4e-b1ff-3f09890b2db3"/>
         </insert>
     </changeSet>

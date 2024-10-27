@@ -11,5 +11,5 @@
 
 	<context:annotation-config/>
 
-	<context:component-scan base-package="org.openmrs.module.billing"/>
+	<context:component-scan base-package="org.openmrs.module.radiology.web"/>
 </beans>

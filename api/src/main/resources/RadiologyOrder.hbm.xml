@@ -24,7 +24,7 @@
         <many-to-one name="location" class="org.openmrs.Concept" />
 
         <many-to-one name="relatedRadiologyOrder" class="org.openmrs.module.radiology.api.model.RadiologyOrder"  column="related_radiology_order_id"/>
-        <set name="radioloy" table="radioloy" inverse="true" cascade="all">
+        <set name="tests" table="radiology" inverse="true" cascade="all">
             <key column="radiology_order_id"/>
             <one-to-many class="org.openmrs.module.radiology.api.model.Radiology"/>
         </set>

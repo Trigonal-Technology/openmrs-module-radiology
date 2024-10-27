@@ -39,7 +39,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javaCompilerVersion>1.8</javaCompilerVersion>
         <openmrsPlatformToolsVersion>2.5.0</openmrsPlatformToolsVersion>
-        <webServicesRest.version>2.32.0</webServicesRest.version>
+        <webServicesRest.version>2.45.0</webServicesRest.version>
     </properties>
 
     <dependencyManagement>

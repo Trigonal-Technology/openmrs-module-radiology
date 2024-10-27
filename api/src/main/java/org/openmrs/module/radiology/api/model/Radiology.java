@@ -100,7 +100,7 @@ public class Radiology extends BaseFormRecordableOpenmrsData {
 	public Concept modality;
 	
 	@OneToMany
-	@JoinTable(name = "encounter_radiologys", joinColumns = @JoinColumn(name = "radiology_id"), inverseJoinColumns = @JoinColumn(name = "encounter_id"))
+	@JoinTable(name = "encounter_radiology_orders", joinColumns = @JoinColumn(name = "radiology_id"), inverseJoinColumns = @JoinColumn(name = "encounter_id"))
 	private List<Encounter> encounters;
 	
 	@ManyToOne

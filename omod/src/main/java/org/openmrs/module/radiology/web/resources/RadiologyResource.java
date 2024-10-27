@@ -1,4 +1,4 @@
-package org.openmrs.module.radiology.resources;
+package org.openmrs.module.radiology.web.resources;
 
 import java.util.ArrayList;
 import java.util.List;
