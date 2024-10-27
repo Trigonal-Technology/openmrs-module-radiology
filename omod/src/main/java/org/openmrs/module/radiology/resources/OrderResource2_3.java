@@ -1,4 +1,4 @@
-package org.openmrs.module.radiology.web.resources;
+package org.openmrs.module.radiology.resources;
 
 import org.openmrs.DrugOrder;
 import org.openmrs.Order;

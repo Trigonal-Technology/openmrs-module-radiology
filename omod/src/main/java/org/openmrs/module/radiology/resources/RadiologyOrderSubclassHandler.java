@@ -1,4 +1,4 @@
-package org.openmrs.module.radiology.web.resources;
+package org.openmrs.module.radiology.resources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +98,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 	@PropertyGetter(value = "tests")
 	public List<Radiology> getRadiologys(RadiologyOrder instance) {
 		try {
-			List<Radiology> tests = new ArrayList<>(instance.getRadiologys());
+			List<Radiology> tests = new ArrayList<>(instance.getTests());
 			return tests;
 		}
 		catch (Exception e) {

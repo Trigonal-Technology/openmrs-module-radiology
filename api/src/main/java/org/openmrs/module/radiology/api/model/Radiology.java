@@ -21,8 +21,6 @@ import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.Location;
 import org.openmrs.Patient;
-import org.openmrs.module.radiology.api.model.Radiology.RadiologyOutcome;
-import org.openmrs.module.radiology.api.model.Radiology.RadiologyStatus;
 
 @Entity
 @Table(name = "radiology_order")

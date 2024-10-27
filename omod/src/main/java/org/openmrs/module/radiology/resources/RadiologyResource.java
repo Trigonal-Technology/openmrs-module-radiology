@@ -1,4 +1,4 @@
-package org.openmrs.module.radiology.web.resources;
+package org.openmrs.module.radiology.resources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +24,9 @@ import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
-@Resource(name = RestConstants.VERSION_1 + "/radiology", supportedClass = Procedure.class, supportedOpenmrsVersions = {
+@Resource(name = RestConstants.VERSION_1 + "/radiology", supportedClass = Radiology.class, supportedOpenmrsVersions = {
         "2.6.* - 9.*" })
-public class RadiologyResource extends DataDelegatingCrudResource<Procedure> {
+public class RadiologyResource extends DataDelegatingCrudResource<Radiology> {
 	
 	private RadiologyService radiologyService;
 	
@@ -157,7 +157,7 @@ public class RadiologyResource extends DataDelegatingCrudResource<Procedure> {
 	}
 	
 	@PropertyGetter(value = "encounters")
-	public List<Encounter> getEncounters(Procedure instance) {
+	public List<Encounter> getEncounters(Radiology instance) {
 		try {
 			List<Encounter> encounters = instance.getEncounters();
 			return encounters;

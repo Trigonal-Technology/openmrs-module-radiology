@@ -60,8 +60,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<properties>
-		<main.basedir>${project.parent.basedir}</main.basedir>
-	</properties>
 </project>

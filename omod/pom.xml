@@ -16,17 +16,10 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>${project.parent.groupId}</groupId>
-			<artifactId>${project.parent.artifactId}-api</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>radiology-api</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.openmrs.api</groupId>
 			<artifactId>openmrs-api</artifactId>

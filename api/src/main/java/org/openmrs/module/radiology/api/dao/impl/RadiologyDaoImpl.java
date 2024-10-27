@@ -23,7 +23,7 @@ public class RadiologyDaoImpl implements RadiologyDao {
 	}
 	
 	@Override
-	public Optional<Procedure> get(int id) {
+	public Optional<Radiology> get(int id) {
 		return Optional.empty();
 	}
 	

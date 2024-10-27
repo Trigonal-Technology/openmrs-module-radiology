@@ -45,7 +45,7 @@ public class RadiologyServiceImpl implements RadiologyService {
 	 * @return
 	 */
 	private List<Encounter> handleEncounter(Radiology radiology) {
-		if (procedure.getEncounters().isEmpty()) {
+		if (radiology.getEncounters().isEmpty()) {
 			return new ArrayList<>();
 		}
 		EncounterService service = Context.getEncounterService();
