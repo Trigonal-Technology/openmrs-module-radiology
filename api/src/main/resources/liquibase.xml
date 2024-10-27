@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
-                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext 
+	    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog 
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
     <changeSet id="radiology-202410251300" author="dipakthapa">
         <preConditions onFail="MARK_RAN">
@@ -63,7 +67,7 @@
             </not>
         </preConditions>
         <createTable tableName="radioloy">
-            <column name="radiology_order_id" type="int" autoIncrement="true">
+            <column name="radiology_id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="patient_id" type="int"/>
@@ -126,16 +130,16 @@
             </not>
         </preConditions>
         <createTable tableName="encounter_radiology_orders">
-            <column name="radiology_order_id" type="int">
+            <column name="radiology_id" type="int">
                 <constraints nullable="false"/>
             </column>
             <column name="encounter_id" type="int">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint constraintName="encounter_radiology_orders_radiology_order_id_fk"
-                                 baseTableName="encounter_radiology_orders" baseColumnNames="radiology_order_id"
-                                 referencedTableName="procedures" referencedColumnNames="radiology_order_id"/>
+        <addForeignKeyConstraint constraintName="encounter_radiology_orders_radiology_id_fk"
+                                 baseTableName="encounter_radiology_orders" baseColumnNames="radiology_id"
+                                 referencedTableName="radiology" referencedColumnNames="radiology_id"/>
         <addForeignKeyConstraint constraintName="encounter_radiology_orders_encounter_id_fk"
                                  baseTableName="encounter_radiology_orders" baseColumnNames="encounter_id"
                                  referencedTableName="encounter" referencedColumnNames="encounter_id"/>

@@ -7,7 +7,7 @@
 	<name>${project.parent.name}</name>
 	<version>${project.parent.version}</version>
 	<package>org.openmrs.module.radiology</package>
-	<author>jecihjoy</author>
+	<author>Dipak Thapa</author>
 	<description>
 		${project.parent.description}
 	</description>
