@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module configVersion="1.2">
+
+	<!-- Base Module Properties -->
+	<id>${project.parent.artifactId}</id>
+	<name>${project.parent.name}</name>
+	<version>${project.parent.version}</version>
+	<package>org.openmrs.module.radiology</package>
+	<author>jecihjoy</author>
+	<description>
+		${project.parent.description}
+	</description>
+
+	<activator>org.openmrs.module.radiology.RadiologyModuleActivator</activator>
+
+	<require_version>2.0.5 - 2.*</require_version>
+
+	<require_modules>
+		<require_module>org.openmrs.module.webservices.rest</require_module>
+	</require_modules>
+
+	<!-- Maps hibernate files, if present -->
+	<mappingFiles>
+		RadiologyOrder.hbm.xml
+	</mappingFiles>
+
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>
+	<messages>
+		<lang>fr</lang>
+		<file>messages_fr.properties</file>
+	</messages>
+	<messages>
+		<lang>es</lang>
+		<file>messages_es.properties</file>
+	</messages>
+	<!-- /Internationalization -->
+
+</module>

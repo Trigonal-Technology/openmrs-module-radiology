@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet id="radiology-202410251300" author="dipakthapa">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="radiology_order"/>
+            </not>
+        </preConditions>
+        <comment>Create Radiology Order Table</comment>
+        <createTable tableName="radiology_order">
+            <column name="order_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="body_site" type="int"/>
+            <column name="specimen_source" type="int"/>
+            <column name="specimen_type" type="int"/>
+            <column name="laterality" type="varchar(20)"/>
+            <column name="clinical_history" type="text"/>
+            <column name="frequency" type="int"/>
+            <column name="number_of_repeats" type="int"/>
+            <column name="location" type="int"/>
+            <column name="related_radiology_order_id" type="int"/>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="radiology_order_order_id_fk"
+                                 baseTableName="radiology_order" baseColumnNames="order_id"
+                                 referencedTableName="orders" referencedColumnNames="order_id"/>
+        <addForeignKeyConstraint constraintName="radiology_order_body_site_fk"
+                                 baseTableName="radiology_order" baseColumnNames="body_site"
+                                 referencedTableName="concept" referencedColumnNames="concept_id"/>
+        <addForeignKeyConstraint constraintName="radiology_order_specimen_source_fk"
+                                 baseTableName="radiology_order" baseColumnNames="specimen_source"
+                                 referencedTableName="concept" referencedColumnNames="concept_id"/>
+        <addForeignKeyConstraint constraintName="radiology_order_specimen_type_fk"
+                                 baseTableName="radiology_order" baseColumnNames="specimen_type"
+                                 referencedTableName="concept" referencedColumnNames="concept_id"/>
+        <addForeignKeyConstraint constraintName="radiology_order_frequency_fk"
+                                 baseTableName="radiology_order" baseColumnNames="frequency"
+                                 referencedTableName="order_frequency" referencedColumnNames="order_frequency_id"/>
+        <addForeignKeyConstraint constraintName="radiology_order_location_fk"
+                                 baseTableName="radiology_order" baseColumnNames="location"
+                                 referencedTableName="concept" referencedColumnNames="concept_id"/>
+        <addForeignKeyConstraint constraintName="radiology_order_related_procedure_fk"
+                                 baseTableName="radiology_order" baseColumnNames="related_radiology_order_id"
+                                 referencedTableName="radiology_order" referencedColumnNames="order_id"/>
+        <createIndex indexName="radiology_order_frequency_index" tableName="radiology_order">
+            <column name="frequency"/>
+        </createIndex>
+        <createIndex indexName="radiology_order_specimen_source_index" tableName="radiology_order">
+            <column name="specimen_source"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="radiology-202410251400" author="dipakthapa">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="radioloy"/>
+            </not>
+        </preConditions>
+        <createTable tableName="radioloy">
+            <column name="radiology_order_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="patient_id" type="int"/>
+            <column name="encounter_id" type="int"/>
+            <column name="radiology_order_id" type="int"/>
+            <column name="concept" type="int"/>
+            <column name="radiology_order_reason" type="int"/>
+            <column name="category" type="int"/>
+            <column name="body_site" type="int"/>
+            <column name="part_of" type="int"/>
+            <column name="start_datetime" type="datetime"/>
+            <column name="end_datetime" type="datetime"/>
+            <column name="status" type="varchar(20)"/>
+            <column name="status_reason" type="int"/>
+            <column name="outcome" type="varchar(20)"/>
+            <column name="location_id" type="int"/>
+            <column name="report" type="text"/>
+            <column name="form_namespace_and_path" type="VARCHAR(255)"/>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="creator" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+            <column name="voided" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="voided_by" type="int"/>
+            <column name="date_voided" type="datetime"/>
+            <column name="void_reason" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="radiology-202410251500" author="dipakthapa">
+       <preConditions onFail="MARK_RAN">
+        <and>
+            <tableExists tableName="radioloy"/>
+            <not>
+                <columnExists tableName="radioloy" columnName="modality"/>
+            </not>
+        </and>
+    </preConditions>
+        <addColumn tableName="radioloy">
+            <column name="modality" type="int"/>
+        </addColumn>
+        <addForeignKeyConstraint constraintName="procedure__modality_fk"
+                                 baseTableName="radioloy" baseColumnNames="modality"
+                                 referencedTableName="concept" referencedColumnNames="concept_id"/>
+    </changeSet>
+
+    <changeSet id="radiology-202410251600" author="dipakthapa">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="encounter_radiology_orders"/>
+            </not>
+        </preConditions>
+        <createTable tableName="encounter_radiology_orders">
+            <column name="radiology_order_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="encounter_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="encounter_radiology_orders_radiology_order_id_fk"
+                                 baseTableName="encounter_radiology_orders" baseColumnNames="radiology_order_id"
+                                 referencedTableName="procedures" referencedColumnNames="radiology_order_id"/>
+        <addForeignKeyConstraint constraintName="encounter_radiology_orders_encounter_id_fk"
+                                 baseTableName="encounter_radiology_orders" baseColumnNames="encounter_id"
+                                 referencedTableName="encounter" referencedColumnNames="encounter_id"/>
+    </changeSet>
+
+    <changeSet  id="radiology-202410251530" author="dipakthapa">
+        <!-- Only run if the concept with the specified UUID does not already exist -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sqlCheck expectedResult="0">
+                    SELECT COUNT(*) FROM order_type WHERE uuid = 'c19c8e82-8b8d-4b4e-b1ff-3f09890b2db3'
+                </sqlCheck>
+            </not>
+        </preConditions>
+
+        <insert tableName="order_type">
+            <column name="name" value="Radiology Order"/>
+            <column name="java_class_name" value="org.openmrs.module.radiology.api.model.RadiologyOrder"/>
+            <column name="description" value="Order type for radiology-related diagnostics"/>
+            <column name="uuid" value="c19c8e82-8b8d-4b4e-b1ff-3f09890b2db3"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
