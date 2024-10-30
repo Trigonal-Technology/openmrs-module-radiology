@@ -26,9 +26,13 @@ import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingSubcl
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingSubclassHandler;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SubClassHandler(supportedClass = RadiologyOrder.class, supportedOpenmrsVersions = { "2.6.* - 9.*" })
 public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler<Order, RadiologyOrder> implements DelegatingSubclassHandler<Order, RadiologyOrder> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(RadiologyOrderSubclassHandler.class);
 	
 	@Override
 	public String getTypeName() {
@@ -37,6 +41,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 	
 	@Override
 	public PageableResult getAllByType(RequestContext requestContext) throws ResourceDoesNotSupportOperationException {
+		LOGGER.info("Inside getAllByType");
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	
@@ -47,6 +52,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 	
 	@Override
 	public DelegatingResourceDescription getUpdatableProperties() throws ResourceDoesNotSupportOperationException {
+		LOGGER.info("Inside getUpdatableProperties");
 		OrderResource2_5 orderResource = (OrderResource2_5) Context.getService(RestService.class)
 		        .getResourceBySupportedClass(Order.class);
 		return orderResource.getUpdatableProperties();
@@ -54,6 +60,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 	
 	@PropertyGetter("display")
 	public static String getDisplay(RadiologyOrder delegate) {
+		LOGGER.info("Inside getDisplay");
 		OrderResource2_5 orderResource = (OrderResource2_5) Context.getService(RestService.class)
 		        .getResourceBySupportedClass(Order.class);
 		return orderResource.getDisplayString(delegate);
@@ -61,6 +68,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 	
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
+		LOGGER.info("Inside getRepresentationDescription");
 		if (rep instanceof DefaultRepresentation) {
 			OrderResource2_5 orderResource = (OrderResource2_5) Context.getService(RestService.class)
 			        .getResourceBySupportedClass(Order.class);
@@ -97,6 +105,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 	
 	@PropertyGetter(value = "tests")
 	public List<Radiology> getRadiologys(RadiologyOrder instance) {
+		LOGGER.info("Inside getRadiologys");
 		try {
 			List<Radiology> tests = new ArrayList<>(instance.getTests());
 			return tests;
@@ -108,6 +117,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 	
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
+		LOGGER.info("Inside getCreatableProperties");
 		OrderResource2_5 orderResource = (OrderResource2_5) Context.getService(RestService.class)
 		        .getResourceBySupportedClass(Order.class);
 		DelegatingResourceDescription d = orderResource.getCreatableProperties();
@@ -127,6 +137,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 	
 	@Override
 	public Model getGETModel(Representation rep) {
+		LOGGER.info("Inside getGETModel");
 		OrderResource2_5 orderResource = (OrderResource2_5) Context.getService(RestService.class)
 		        .getResourceBySupportedClass(Order.class);
 		ModelImpl orderModel = (ModelImpl) orderResource.getGETModel(rep);
@@ -145,6 +156,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 	
 	@Override
 	public Model getCREATEModel(Representation rep) {
+		LOGGER.info("Inside getCREATEModel");
 		OrderResource2_5 orderResource = (OrderResource2_5) Context.getService(RestService.class)
 		        .getResourceBySupportedClass(Order.class);
 		ModelImpl orderModel = (ModelImpl) orderResource.getCREATEModel(rep);

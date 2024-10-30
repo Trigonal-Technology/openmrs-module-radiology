@@ -40,6 +40,7 @@
         <javaCompilerVersion>1.8</javaCompilerVersion>
         <openmrsPlatformToolsVersion>2.5.0</openmrsPlatformToolsVersion>
         <webServicesRest.version>2.45.0</webServicesRest.version>
+        <slf4jVersion>1.7.36</slf4jVersion>
     </properties>
 
     <dependencyManagement>
@@ -93,6 +94,11 @@
                 <scope>test</scope>
             </dependency>
 
+            <dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4jVersion}</version>
+			</dependency>
 
         </dependencies>
     </dependencyManagement>

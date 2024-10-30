@@ -23,10 +23,13 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Resource(name = RestConstants.VERSION_1 + "/radiology", supportedClass = Radiology.class, supportedOpenmrsVersions = {
         "2.6.* - 9.*" })
 public class RadiologyResource extends DataDelegatingCrudResource<Radiology> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(RadiologyResource.class);
 	
 	private RadiologyService radiologyService;
 	
@@ -36,6 +39,7 @@ public class RadiologyResource extends DataDelegatingCrudResource<Radiology> {
 	
 	@Override
 	public Radiology getByUniqueId(String uuid) {
+		LOGGER.info("Inside getByUniqueId");
 		Optional<Radiology> radiology = radiologyService.getRadiologyOrderByUuid(uuid);
 		if (radiology.isPresent()) {
 			return radiology.get();
@@ -56,6 +60,7 @@ public class RadiologyResource extends DataDelegatingCrudResource<Radiology> {
 	
 	@Override
 	public Radiology save(Radiology radiology) {
+		LOGGER.info("Inside save");
 		return radiologyService.saveOrUpdate(radiology);
 	}
 	
@@ -74,6 +79,7 @@ public class RadiologyResource extends DataDelegatingCrudResource<Radiology> {
 	
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() throws ResourceDoesNotSupportOperationException {
+		LOGGER.info("Inside getCreatableProperties");
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("patient");
 		description.addProperty("encounter");
@@ -98,6 +104,7 @@ public class RadiologyResource extends DataDelegatingCrudResource<Radiology> {
 	
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation representation) {
+		LOGGER.info("Inside getRepresentationDescription");
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 		if (representation instanceof RefRepresentation) {
 			description.addProperty("uuid");
@@ -158,6 +165,7 @@ public class RadiologyResource extends DataDelegatingCrudResource<Radiology> {
 	
 	@PropertyGetter(value = "encounters")
 	public List<Encounter> getEncounters(Radiology instance) {
+		LOGGER.info("Inside getEncounters");
 		try {
 			List<Encounter> encounters = instance.getEncounters();
 			return encounters;

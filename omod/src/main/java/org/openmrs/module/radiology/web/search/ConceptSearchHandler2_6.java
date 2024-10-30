@@ -7,6 +7,7 @@ import org.openmrs.Concept;
 import org.openmrs.ConceptClass;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.web.resources.RadiologyResource;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
@@ -15,10 +16,13 @@ import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ConceptSearchHandler2_6 implements SearchHandler {
+	private static final Logger LOGGER = LoggerFactory.getLogger(RadiologyResource.class);
 	
 	private final SearchConfig searchConfig = new SearchConfig("byConceptClass", RestConstants.VERSION_1 + "/concept",
 	        Collections.singletonList("2.4.* - 9.*"), Collections.singletonList(
@@ -31,6 +35,7 @@ public class ConceptSearchHandler2_6 implements SearchHandler {
 	
 	@Override
 	public PageableResult search(RequestContext requestContext) throws ResponseException {
+		LOGGER.info("Inside search");
 		String conceptClass = requestContext.getParameter("conceptClass");
 		ConceptService service = Context.getConceptService();
 		ConceptClass conceptClazz = service.getConceptClassByUuid(conceptClass);

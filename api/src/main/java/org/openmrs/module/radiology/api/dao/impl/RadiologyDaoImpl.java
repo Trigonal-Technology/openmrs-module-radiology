@@ -9,8 +9,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.openmrs.module.radiology.api.dao.RadiologyDao;
 import org.openmrs.module.radiology.api.model.Radiology;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RadiologyDaoImpl implements RadiologyDao {
+	private static final Logger LOGGER = LoggerFactory.getLogger(RadiologyDaoImpl.class);
 	
 	private SessionFactory sessionFactory;
 	
@@ -24,17 +27,20 @@ public class RadiologyDaoImpl implements RadiologyDao {
 	
 	@Override
 	public Optional<Radiology> get(int id) {
+		LOGGER.info("Inside get");
 		return Optional.empty();
 	}
 	
 	@Override
 	public Optional<Radiology> getRadiologyOrderByUuid(String uuid) {
+		LOGGER.info("Inside getRadiologyOrderByUuid");
 		Criteria criteria = getCurrentSession().createCriteria(Radiology.class);
 		return Optional.ofNullable((Radiology) criteria.add(eq("uuid", uuid)).uniqueResult());
 	}
 	
 	@Override
 	public Radiology saveOrUpdate(Radiology radiology) {
+		LOGGER.info("Inside saveOrUpdate");
 		getCurrentSession().saveOrUpdate(radiology);
 		return radiology;
 	}

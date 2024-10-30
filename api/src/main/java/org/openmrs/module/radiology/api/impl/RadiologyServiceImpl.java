@@ -16,10 +16,13 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.api.RadiologyService;
 import org.openmrs.module.radiology.api.dao.RadiologyDao;
 import org.openmrs.module.radiology.api.model.Radiology;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Transactional
 public class RadiologyServiceImpl implements RadiologyService {
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(RadiologyServiceImpl.class);
+
 	private RadiologyDao radiologyDao;
 	
 	public void setRadiologyDao(RadiologyDao radiologyDao) {
@@ -28,11 +31,13 @@ public class RadiologyServiceImpl implements RadiologyService {
 	
 	@Override
 	public Optional<Radiology> getRadiologyOrderByUuid(String uuid) {
+		LOGGER.info("Inside getRadiologyOrderByUuid");
 		return radiologyDao.getRadiologyOrderByUuid(uuid);
 	}
 	
 	@Override
-	public Radiology saveOrUpdate(Radiology radiology) {
+	public Radiology saveOrUpdate(Radiology radiology) { 
+		LOGGER.info("Inside saveOrUpdate");
 		List<Encounter> encounters = handleEncounter(radiology);
 		radiology.setEncounters(encounters);
 		return radiologyDao.saveOrUpdate(radiology);
@@ -45,6 +50,7 @@ public class RadiologyServiceImpl implements RadiologyService {
 	 * @return
 	 */
 	private List<Encounter> handleEncounter(Radiology radiology) {
+		LOGGER.info("Inside handleEncounter");
 		if (radiology.getEncounters().isEmpty()) {
 			return new ArrayList<>();
 		}

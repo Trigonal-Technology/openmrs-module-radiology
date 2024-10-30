@@ -49,7 +49,7 @@
         <addForeignKeyConstraint constraintName="radiology_order_location_fk"
                                  baseTableName="radiology_order" baseColumnNames="location"
                                  referencedTableName="concept" referencedColumnNames="concept_id"/>
-        <addForeignKeyConstraint constraintName="radiology_order_related_procedure_fk"
+        <addForeignKeyConstraint constraintName="radiology_order_related_radiology_fk"
                                  baseTableName="radiology_order" baseColumnNames="related_radiology_order_id"
                                  referencedTableName="radiology_order" referencedColumnNames="order_id"/>
         <createIndex indexName="radiology_order_frequency_index" tableName="radiology_order">
@@ -105,7 +105,7 @@
             <column name="date_voided" type="datetime"/>
             <column name="void_reason" type="varchar(255)"/>
         </createTable>
-        <addForeignKeyConstraint constraintName="procedure__modality_fk"
+        <addForeignKeyConstraint constraintName="radiology_modality_fk"
                                  baseTableName="radiology" baseColumnNames="modality"
                                  referencedTableName="concept" referencedColumnNames="concept_id"/>
     </changeSet>
@@ -134,7 +134,7 @@
 
     <changeSet  id="radiology-202410251530" author="dipakthapa">
         <insert tableName="order_type">
-            <column name="order_type_id" valueNumeric="10"/>
+            <column name="order_type_id" valueNumeric="11"/>
             <column name="name" value="Radiology Order"/>
             <column name="java_class_name" value="org.openmrs.module.radiology.api.model.RadiologyOrder"/>
             <column name="description" value="Order type for radiology-related diagnostics"/>
