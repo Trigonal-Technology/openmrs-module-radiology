@@ -21,9 +21,9 @@
 	</require_modules>
 
 	<!-- Maps hibernate files, if present -->
-	<!-- <mappingFiles>
+	<mappingFiles>
 		RadiologyOrder.hbm.xml
-	</mappingFiles> -->
+	</mappingFiles>
 
 	<messages>
 		<lang>en</lang>

@@ -41,11 +41,7 @@ public class RadiologyResource extends DataDelegatingCrudResource<Radiology> {
 	public Radiology getByUniqueId(String uuid) {
 		LOGGER.info("Inside getByUniqueId");
 		Optional<Radiology> radiology = radiologyService.getRadiologyOrderByUuid(uuid);
-		if (radiology.isPresent()) {
-			return radiology.get();
-		} else {
-			return null;
-		}
+        return radiology.orElse(null);
 	}
 	
 	@Override

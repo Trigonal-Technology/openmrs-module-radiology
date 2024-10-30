@@ -81,7 +81,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 			d.addProperty("specimenType", Representation.REF);
 			d.addProperty("bodySite", Representation.REF);
 			d.addProperty("relatedRadiologyOrder", Representation.REF);
-			d.addProperty("tests", Representation.REF);
+			d.addProperty("radiologyOrders", Representation.REF);
 			return d;
 		} else if (rep instanceof FullRepresentation) {
 			OrderResource2_5 orderResource = (OrderResource2_5) Context.getService(RestService.class)
@@ -95,7 +95,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 			d.addProperty("specimenType", Representation.FULL);
 			d.addProperty("bodySite", Representation.FULL);
 			d.addProperty("relatedRadiologyOrder", Representation.FULL);
-			d.addProperty("tests", Representation.FULL);
+			d.addProperty("radiologyOrders", Representation.FULL);
 			return d;
 		} else if (rep instanceof CustomRepresentation) { // custom rep
 			return null;
@@ -103,12 +103,12 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 		return null;
 	}
 	
-	@PropertyGetter(value = "tests")
-	public List<Radiology> getRadiologys(RadiologyOrder instance) {
-		LOGGER.info("Inside getRadiologys");
+	@PropertyGetter(value = "radiologyOrders")
+	public List<Radiology> getRadiologyOrders(RadiologyOrder instance) {
+		LOGGER.info("Inside getRadiologyOrders");
 		try {
-			List<Radiology> tests = new ArrayList<>(instance.getTests());
-			return tests;
+			List<Radiology> radiologyOrders = new ArrayList<>(instance.getRadiologyOrders());
+			return radiologyOrders;
 		}
 		catch (Exception e) {
 			return new ArrayList<>();

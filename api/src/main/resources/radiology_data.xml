@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext 
+	    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog 
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+
+   <changeSet id="radiology-202410251700" author="dipakthapa">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM concept WHERE uuid = '5fed39a0-daa3-4415-abd5-2414a8ea7387'
+            </sqlCheck>
+        </preConditions>
+        <comment>Create Radiology Body Site concept</comment>
+        
+        <insert tableName="concept">
+            <column name="datatype_id" valueNumeric="2"/> <!-- 2 is Coded datatype -->
+            <column name="class_id" valueNumeric="7"/> <!-- 7 is Misc class -->
+            <column name="is_set" valueBoolean="false"/>
+            <column name="retired" valueBoolean="false"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="version" value=""/>
+            <column name="uuid" value="5fed39a0-daa3-4415-abd5-2414a8ea7387"/>
+        </insert>
+        
+        <insert tableName="concept_name">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = '5fed39a0-daa3-4415-abd5-2414a8ea7387')"/>
+            <column name="name" value="Radiology Body Site"/>
+            <column name="locale" value="en"/>
+            <column name="locale_preferred" valueBoolean="true"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="concept_name_type" value="FULLY_SPECIFIED"/>
+            <column name="voided" valueBoolean="false"/>
+            <column name="uuid" value="7d24c12a-1c3c-4d76-a3e8-1e8c11a57f21"/>
+        </insert>
+
+        <insert tableName="concept_description">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = '5fed39a0-daa3-4415-abd5-2414a8ea7387')"/>
+            <column name="description" value="Anatomical location or body site for radiology procedures"/>
+            <column name="locale" value="en"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="uuid" value="7d24c12a-1c3c-4d76-a3e8-1e8c11a57f22"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="radiology-202410251800" author="dipakthapa">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM concept_name WHERE name = 'Chest' AND concept_name_type = 'FULLY_SPECIFIED'
+            </sqlCheck>
+        </preConditions>
+        <comment>Create body site answer concepts and link them to Radiology Body Site</comment>
+
+        <!-- Chest -->
+        <insert tableName="concept">
+            <column name="datatype_id" valueNumeric="4"/> <!-- N/A -->
+            <column name="class_id" valueNumeric="7"/> <!-- Misc -->
+            <column name="is_set" valueBoolean="false"/>
+            <column name="retired" valueBoolean="false"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="uuid" value="7d24c12a-1c3c-4d76-a3e8-1e8c11a57f01"/>
+        </insert>
+        <insert tableName="concept_name">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = '7d24c12a-1c3c-4d76-a3e8-1e8c11a57f01')"/>
+            <column name="name" value="Chest"/>
+            <column name="locale" value="en"/>
+            <column name="locale_preferred" valueBoolean="true"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="concept_name_type" value="FULLY_SPECIFIED"/>
+            <column name="voided" valueBoolean="false"/>
+            <column name="uuid" value="7d24c12a-1c3c-4d76-a3e8-1e8c11a57f31"/>
+        </insert>
+
+        <!-- Link Chest as answer -->
+        <insert tableName="concept_answer">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = '5fed39a0-daa3-4415-abd5-2414a8ea7387')"/>
+            <column name="answer_concept" valueComputed="(SELECT concept_id FROM concept WHERE uuid = '7d24c12a-1c3c-4d76-a3e8-1e8c11a57f01')"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="uuid" value="7d24c12a-1c3c-4d76-a3e8-1e8c11a57f41"/>
+            <column name="sort_weight" valueNumeric="1"/>
+        </insert>
+
+        <!-- Neck -->
+        <insert tableName="concept">
+            <column name="datatype_id" valueNumeric="4"/>
+            <column name="class_id" valueNumeric="7"/>
+            <column name="is_set" valueBoolean="false"/>
+            <column name="retired" valueBoolean="false"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="uuid" value="7d24c12a-1c3c-4d76-a3e8-1e8c11a57f02"/>
+        </insert>
+        <insert tableName="concept_name">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = '7d24c12a-1c3c-4d76-a3e8-1e8c11a57f02')"/>
+            <column name="name" value="Neck"/>
+            <column name="locale" value="en"/>
+            <column name="locale_preferred" valueBoolean="true"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="concept_name_type" value="FULLY_SPECIFIED"/>
+            <column name="voided" valueBoolean="false"/>
+            <column name="uuid" value="7d24c12a-1c3c-4d76-a3e8-1e8c11a57f32"/>
+        </insert>
+
+        <!-- Continue the same pattern for other body sites: , Face, Shoulder, Arm, Leg, Ribs, Hand, Hip, Knee, Abdomen, Pelvis, Spine, Special Xrays, Other Radiology -->
+        
+    </changeSet>
+
+    <changeSet id="radiology-202410251900" author="dipakthapa">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM concept WHERE uuid = 'cd9f116c-517d-439e-847d-d8d257434083'
+            </sqlCheck>
+        </preConditions>
+        <comment>Create Radiology Orders concept set</comment>
+        
+        <insert tableName="concept">
+            <column name="datatype_id" valueNumeric="4"/> <!-- 4 is N/A datatype -->
+            <column name="class_id" valueNumeric="10"/> <!-- 10 is ConvSet class -->
+            <column name="is_set" valueBoolean="true"/>
+            <column name="retired" valueBoolean="false"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="version" value=""/>
+            <column name="uuid" value="cd9f116c-517d-439e-847d-d8d257434083"/>
+        </insert>
+        
+        <insert tableName="concept_name">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = 'cd9f116c-517d-439e-847d-d8d257434083')"/>
+            <column name="name" value="Radiology Orders"/>
+            <column name="locale" value="en"/>
+            <column name="locale_preferred" valueBoolean="true"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="concept_name_type" value="FULLY_SPECIFIED"/>
+            <column name="voided" valueBoolean="false"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+
+        <insert tableName="concept_description">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = 'cd9f116c-517d-439e-847d-d8d257434083')"/>
+            <column name="description" value="Set of concepts for radiology orders"/>
+            <column name="locale" value="en"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="radiology-202410252000" author="dipakthapa">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM concept_name WHERE name = 'Chest, 1 view (X-ray)' AND concept_name_type = 'FULLY_SPECIFIED'
+            </sqlCheck>
+        </preConditions>
+        <comment>Create Chest X-ray concept and add it as set member to Radiology Orders</comment>
+        
+        <!-- Create Chest X-ray concept -->
+        <insert tableName="concept">
+            <column name="datatype_id" valueNumeric="3"/> <!-- 3 is Text datatype -->
+            <column name="class_id" valueNumeric="24"/> <!-- 24 is Test class -->
+            <column name="is_set" valueBoolean="false"/>
+            <column name="retired" valueBoolean="false"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="version" value=""/>
+            <column name="uuid" value="7d24c12a-1c3c-4d76-a3e8-1e8c11a57f20"/>
+        </insert>
+        
+        <!-- Add concept name -->
+        <insert tableName="concept_name">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = '7d24c12a-1c3c-4d76-a3e8-1e8c11a57f20')"/>
+            <column name="name" value="Chest, 1 view (X-ray)"/>
+            <column name="locale" value="en"/>
+            <column name="locale_preferred" valueBoolean="true"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="concept_name_type" value="FULLY_SPECIFIED"/>
+            <column name="voided" valueBoolean="false"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+
+        <!-- Add concept description -->
+        <insert tableName="concept_description">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = '7d24c12a-1c3c-4d76-a3e8-1e8c11a57f20')"/>
+            <column name="description" value="Single view chest X-ray radiological examination"/>
+            <column name="locale" value="en"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+
+        <!-- Add as set member to Radiology Orders -->
+        <insert tableName="concept_set">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = '7d24c12a-1c3c-4d76-a3e8-1e8c11a57f20')"/>
+            <column name="concept_set" valueComputed="(SELECT concept_id FROM concept WHERE uuid = 'cd9f116c-517d-439e-847d-d8d257434083')"/>
+            <column name="sort_weight" valueNumeric="1"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="uuid" valueComputed="uuid()"/>
+        </insert>
+    </changeSet>
+
+
+</databaseChangeLog>

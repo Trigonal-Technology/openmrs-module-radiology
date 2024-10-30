@@ -23,7 +23,7 @@ import org.openmrs.Location;
 import org.openmrs.Patient;
 
 @Entity
-@Table(name = "radiology_order")
+@Table(name = "radiology")
 public class Radiology extends BaseFormRecordableOpenmrsData {
 	
 	public enum RadiologyStatus {
@@ -61,7 +61,7 @@ public class Radiology extends BaseFormRecordableOpenmrsData {
 	private Concept concept;
 	
 	@ManyToOne
-	@JoinColumn(name = "radiology_reason")
+	@JoinColumn(name = "radiology_order_reason")
 	private Concept radiologyReason;
 	
 	@ManyToOne
@@ -83,6 +83,7 @@ public class Radiology extends BaseFormRecordableOpenmrsData {
 	private Date endDatetime;
 	
 	@Enumerated(EnumType.STRING)
+	@Column(name = "status")
 	private RadiologyStatus status;
 	
 	@ManyToOne
@@ -90,6 +91,7 @@ public class Radiology extends BaseFormRecordableOpenmrsData {
 	private Concept statusReason;
 	
 	@Enumerated(EnumType.STRING)
+	@Column(name = "outcome")
 	private RadiologyOutcome outcome;
 	
 	@Column(name = "report")

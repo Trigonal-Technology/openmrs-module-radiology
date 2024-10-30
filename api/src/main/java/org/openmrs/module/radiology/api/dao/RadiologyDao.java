@@ -12,5 +12,5 @@ public interface RadiologyDao {
 	
 	Optional<Radiology> getRadiologyOrderByUuid(@NotNull String uuid);
 	
-	Radiology saveOrUpdate(@NotNull Radiology procedure);
+	Radiology saveOrUpdate(@NotNull Radiology radiology);
 }

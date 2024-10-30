@@ -9,6 +9,8 @@ target
 *.releaseBackup
 release.properties
 
+.vscode/
+
 # Package Files #
 *.jar
 *.war
