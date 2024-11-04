@@ -3,6 +3,8 @@ package org.openmrs.module.radiology;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.BaseModuleActivator;
+import org.openmrs.module.Module;
+import org.openmrs.module.ModuleFactory;
 
 /**
  * This class contains the logic that is run every time this module is either started or stopped.
@@ -16,7 +18,7 @@ public class RadiologyModuleActivator extends BaseModuleActivator {
 	 */
 	@Override
 	public void contextRefreshed() {
-		LOG.info("OpenMRS Radiology Module Module refreshed");
+		LOG.error("OpenMRS Radiology Module Module refreshed");
 	}
 	
 	/**
@@ -24,7 +26,7 @@ public class RadiologyModuleActivator extends BaseModuleActivator {
 	 */
 	@Override
 	public void started() {
-		LOG.info("OpenMRS Radiology Module Module started");
+		LOG.error("OpenMRS Radiology Module Module started");
 	}
 	
 	/**
@@ -32,6 +34,6 @@ public class RadiologyModuleActivator extends BaseModuleActivator {
 	 */
 	@Override
 	public void stopped() {
-		LOG.info("OpenMRS Radiology Module Module stopped");
+		LOG.error("OpenMRS Radiology Module Module stopped");
 	}
 }

@@ -149,4 +149,48 @@
 
     <include file="radiology_data.xml"/>
 
+    <changeSet id="radiology-202410252030" author="dipakthapa">
+        <addColumn tableName="radiology_order">
+            <column name="radiology_status" type="varchar(20)" defaultValue="PENDING"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="radiology-202410252100" author="dipakthapa">
+        <createTable tableName="radiology_order_queue">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="radiology_order_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(20)" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+            <column name="urgency" type="varchar(10)" defaultValue="ROUTINE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creator" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+            <column name="voided" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="voided_by" type="int"/>
+            <column name="date_voided" type="datetime"/>
+            <column name="void_reason" type="varchar(255)"/>
+            <column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+        </createTable>
+        
+        <addForeignKeyConstraint baseTableName="radiology_order_queue"
+                                baseColumnNames="radiology_order_id"
+                                referencedTableName="radiology_order"
+                                referencedColumnNames="order_id"
+                                constraintName="fk_radiology_order"/>
+    </changeSet>
+
 </databaseChangeLog>

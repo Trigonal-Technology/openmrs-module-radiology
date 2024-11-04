@@ -20,6 +20,17 @@
 		<require_module>org.openmrs.module.webservices.rest</require_module>
 	</require_modules>
 
+	<advice>
+		<point>org.openmrs.api.OrderService</point>
+		<class>${project.parent.groupId}.${project.parent.artifactId}.api.advice.RadiologyOrderCreateBeforeAdvice</class>
+	</advice>
+
+	<advice>
+		<point>org.openmrs.api.OrderService</point>
+		<class>${project.parent.groupId}.${project.parent.artifactId}.api.advice.RadiologyOrderCreateAfterAdvice</class>
+	</advice>
+
+
 	<!-- Maps hibernate files, if present -->
 	<mappingFiles>
 		RadiologyOrder.hbm.xml

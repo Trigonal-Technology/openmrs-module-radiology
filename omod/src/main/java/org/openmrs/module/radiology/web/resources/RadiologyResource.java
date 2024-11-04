@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import org.openmrs.Encounter;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.api.RadiologyService;
+import org.openmrs.module.radiology.api.service.RadiologyService;
 import org.openmrs.module.radiology.api.model.Radiology;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 public class RadiologyResource extends DataDelegatingCrudResource<Radiology> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RadiologyResource.class);
 	
-	private RadiologyService radiologyService;
+	private final RadiologyService radiologyService;
 	
 	public RadiologyResource() {
 		this.radiologyService = Context.getService(RadiologyService.class);

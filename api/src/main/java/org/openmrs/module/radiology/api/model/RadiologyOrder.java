@@ -4,20 +4,35 @@ import java.util.Set;
 
 import org.openmrs.Concept;
 import org.openmrs.ServiceOrder;
+import org.openmrs.module.radiology.api.enums.RadiologyOrderStatus;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.PrePersist;
 
 public class RadiologyOrder extends ServiceOrder {
 
-	public static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-	public Concept specimenType;
+	private Concept specimenType;
 
-	public Concept bodySite;
+	private Concept bodySite;
 
 	private RadiologyOrder relatedRadiologyOrder;
 
 	private Set<Radiology> radiologyOrders;
 
+	private RadiologyOrderStatus radiologyStatus;
+
 	public RadiologyOrder() {
+	}
+
+	@PrePersist
+	public void setDefaults() {
+		if (this.radiologyStatus == null) {
+			this.radiologyStatus = RadiologyOrderStatus.PENDING;
+		}
+		// Add more default value settings if required
 	}
 
 	@Override
@@ -83,5 +98,13 @@ public class RadiologyOrder extends ServiceOrder {
 
 	public void setRelatedRadiologyOrder(RadiologyOrder relatedRadiologyOrder) {
 		this.relatedRadiologyOrder = relatedRadiologyOrder;
+	}
+
+	public RadiologyOrderStatus getRadiologyStatus() {
+		return radiologyStatus;
+	}
+
+	public void setRadiologyStatus(RadiologyOrderStatus radiologyStatus) {
+		this.radiologyStatus = radiologyStatus;
 	}
 }

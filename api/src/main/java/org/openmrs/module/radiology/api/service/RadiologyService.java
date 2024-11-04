@@ -1,4 +1,4 @@
-package org.openmrs.module.radiology.api;
+package org.openmrs.module.radiology.api.service;
 
 import javax.validation.constraints.NotNull;
 

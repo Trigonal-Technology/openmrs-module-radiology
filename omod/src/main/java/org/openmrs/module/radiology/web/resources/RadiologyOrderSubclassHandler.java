@@ -10,6 +10,7 @@ import io.swagger.models.properties.RefProperty;
 import io.swagger.models.properties.StringProperty;
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.api.enums.RadiologyOrderStatus;
 import org.openmrs.module.radiology.api.model.Radiology;
 import org.openmrs.module.radiology.api.model.RadiologyOrder;
 import org.openmrs.module.webservices.docs.swagger.core.property.EnumProperty;
@@ -80,6 +81,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 			d.addProperty("numberOfRepeats");
 			d.addProperty("specimenType", Representation.REF);
 			d.addProperty("bodySite", Representation.REF);
+			d.addProperty("radiologyStatus");
 			d.addProperty("relatedRadiologyOrder", Representation.REF);
 			d.addProperty("radiologyOrders", Representation.REF);
 			return d;
@@ -94,6 +96,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 			d.addProperty("numberOfRepeats");
 			d.addProperty("specimenType", Representation.FULL);
 			d.addProperty("bodySite", Representation.FULL);
+			d.addProperty("radiologyStatus");
 			d.addProperty("relatedRadiologyOrder", Representation.FULL);
 			d.addProperty("radiologyOrders", Representation.FULL);
 			return d;
@@ -129,6 +132,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 		d.addProperty("orderType");
 		d.addProperty("bodySite");
 		d.addProperty("specimenType");
+		d.addProperty("radiologyStatus");
 		d.addProperty("commentToFulfiller");
 		d.addProperty("scheduledDate");
 		d.addProperty("relatedRadiology");
@@ -142,7 +146,9 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 		        .getResourceBySupportedClass(Order.class);
 		ModelImpl orderModel = (ModelImpl) orderResource.getGETModel(rep);
 		orderModel.property("laterality", new EnumProperty(RadiologyOrder.Laterality.class))
-		        .property("clinicalHistory", new StringProperty()).property("numberOfRepeats", new IntegerProperty());
+		        .property("clinicalHistory", new StringProperty())
+				.property("radiologyStatus", new EnumProperty(RadiologyOrderStatus.PENDING.getClass()))
+				.property("numberOfRepeats", new IntegerProperty());
 		
 		if (rep instanceof DefaultRepresentation) {
 			orderModel.property("specimenSource", new RefProperty("#/definitions/ConceptGetRef")).property("frequency",
@@ -162,6 +168,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 		ModelImpl orderModel = (ModelImpl) orderResource.getCREATEModel(rep);
 		return orderModel.property("specimenSource", new StringProperty().example("uuid"))
 		        .property("laterality", new EnumProperty(RadiologyOrder.Laterality.class))
+				.property("radiologyStatus", new EnumProperty(RadiologyOrderStatus.PENDING.getClass()))
 		        .property("clinicalHistory", new StringProperty())
 		        .property("frequency", new StringProperty().example("uuid"))
 		        .property("numberOfRepeats", new IntegerProperty());

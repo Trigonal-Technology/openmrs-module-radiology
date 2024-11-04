@@ -26,8 +26,19 @@
     <bean id="radiologyService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target">
-            <bean class="org.openmrs.module.radiology.api.impl.RadiologyServiceImpl">
+            <bean class="org.openmrs.module.radiology.api.service.impl.RadiologyServiceImpl">
                 <property name="radiologyDao" ref="radiologyDao"/>
+            </bean>
+        </property>
+        <property name="preInterceptors" ref="serviceInterceptors"/>
+        <property name="transactionAttributeSource" ref="transactionAttributeSource"/>
+    </bean>
+
+    <bean id="radiologyOrderQueueService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="target">
+            <bean class="org.openmrs.module.radiology.api.service.impl.RadiologyOrderQueueServiceImpl">
+                <property name="radiologyOrderQueueDao" ref="radiologyOrderQueueDao"/>
             </bean>
         </property>
         <property name="preInterceptors" ref="serviceInterceptors"/>
@@ -40,11 +51,26 @@
         </property>
     </bean>
 
+    <bean id="radiologyOrderQueueDao" class="org.openmrs.module.radiology.api.dao.impl.RadiologyOrderQueueDaoImpl">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
+        </property>
+    </bean>
+
     <bean parent="serviceContext">
         <property name="moduleService">
             <list>
-                <value>org.openmrs.module.radiology.api.RadiologyService</value>
+                <value>org.openmrs.module.radiology.api.service.RadiologyService</value>
                 <ref bean="radiologyService"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list>
+                <value>org.openmrs.module.radiology.api.service.RadiologyOrderQueueService</value>
+                <ref bean="radiologyOrderQueueService"/>
             </list>
         </property>
     </bean>

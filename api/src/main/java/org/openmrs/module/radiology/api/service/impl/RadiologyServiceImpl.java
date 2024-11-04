@@ -1,4 +1,4 @@
-package org.openmrs.module.radiology.api.impl;
+package org.openmrs.module.radiology.api.service.impl;
 
 import javax.transaction.Transactional;
 
@@ -13,21 +13,27 @@ import org.openmrs.EncounterProvider;
 import org.openmrs.Obs;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.api.RadiologyService;
+import org.openmrs.module.radiology.api.dao.RadiologyOrderQueueDao;
+import org.openmrs.module.radiology.api.enums.RadiologyOrderStatus;
+import org.openmrs.module.radiology.api.service.RadiologyService;
 import org.openmrs.module.radiology.api.dao.RadiologyDao;
 import org.openmrs.module.radiology.api.model.Radiology;
+import org.openmrs.module.radiology.api.model.RadiologyOrder;
+import org.openmrs.module.radiology.api.model.RadiologyOrderQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 @Transactional
 public class RadiologyServiceImpl implements RadiologyService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RadiologyServiceImpl.class);
 
 	private RadiologyDao radiologyDao;
-	
+
 	public void setRadiologyDao(RadiologyDao radiologyDao) {
 		this.radiologyDao = radiologyDao;
 	}
+
 	
 	@Override
 	public Optional<Radiology> getRadiologyOrderByUuid(String uuid) {
@@ -40,7 +46,12 @@ public class RadiologyServiceImpl implements RadiologyService {
 		LOGGER.info("Inside saveOrUpdate");
 		List<Encounter> encounters = handleEncounter(radiology);
 		radiology.setEncounters(encounters);
-		return radiologyDao.saveOrUpdate(radiology);
+		radiologyDao.saveOrUpdate(radiology);
+
+		//Add it to queue
+
+
+		return radiology;
 	}
 	
 	/**
@@ -93,4 +104,30 @@ public class RadiologyServiceImpl implements RadiologyService {
 		}
 		return ret;
 	}
+
+//	private void manageRadiologyOrderQueue(Radiology radiology) {
+//    // Assuming you have a method to get the RadiologyOrder from the Radiology object
+//    RadiologyOrder order = radiology.getRadiologyOrder();
+//
+//    if (order != null) {
+//        // Check if the order already exists in the queue
+//        Optional<RadiologyOrderQueue> existingQueueEntry = radiologyOrderQueueDao.findByRadiologyOrderId(order.getId());
+//
+//        if (existingQueueEntry.isPresent()) {
+//            // Update existing entry
+//            RadiologyOrderQueue queueEntry = existingQueueEntry.get();
+//            queueEntry.setStatus(RadiologyOrderStatus.PENDING); // Update status as needed
+//            queueEntry.setUrgency(order.getUrgency());
+//            radiologyOrderQueueDao.saveOrUpdate(queueEntry);
+//        } else {
+//            // Create new entry
+//            RadiologyOrderQueue newQueueEntry = new RadiologyOrderQueue();
+//            newQueueEntry.setRadiologyOrderId(order);
+//            newQueueEntry.setStatus(RadiologyOrderStatus.PENDING);
+//            newQueueEntry.setUrgency(order.getUrgency());
+//            radiologyOrderQueueDao.saveOrUpdate(newQueueEntry);
+//        }
+//    }
+
+
 }

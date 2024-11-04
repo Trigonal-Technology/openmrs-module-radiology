@@ -11,7 +11,9 @@ import org.openmrs.module.radiology.api.dao.RadiologyDao;
 import org.openmrs.module.radiology.api.model.Radiology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
+//@Repository
 public class RadiologyDaoImpl implements RadiologyDao {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RadiologyDaoImpl.class);
 	

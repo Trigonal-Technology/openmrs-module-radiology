@@ -7,6 +7,7 @@ import org.openmrs.ReferralOrder;
 import org.openmrs.TestOrder;
 import org.openmrs.api.OrderContext;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.api.enums.RadiologyOrderStatus;
 import org.openmrs.module.radiology.api.model.RadiologyOrder;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -44,6 +45,7 @@ public class OrderResource2_5 extends OrderResource2_2 {
 			orderType = Context.getOrderService().getOrderTypeByUuid(RADIOLOGY_ORDER_TYPE_UUID);
 		}
 
+		orderContext.setAttribute("radiologyStatus", RadiologyOrderStatus.PENDING);
 		orderContext.setCareSetting(null);
 		orderContext.setOrderType(orderType);
 		return orderContext;
