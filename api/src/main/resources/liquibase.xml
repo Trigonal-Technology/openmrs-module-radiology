@@ -132,7 +132,7 @@
                                  referencedTableName="encounter" referencedColumnNames="encounter_id"/>
     </changeSet>
 
-    <changeSet  id="radiology-202410251530" author="dipakthapa">
+    <changeSet id="radiology-202410251530" author="dipakthapa">
         <insert tableName="order_type">
             <column name="order_type_id" valueNumeric="11"/>
             <column name="name" value="Radiology Order"/>
@@ -192,5 +192,61 @@
                                 referencedColumnNames="order_id"
                                 constraintName="fk_radiology_order"/>
     </changeSet>
+
+    <changeSet id="radiology-202411011000" author="dipakthapa">
+        <comment>Create Modality Table</comment>
+        <createTable tableName="modality">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(25)">
+            </column>
+            <column name="description" type="varchar(255)">
+            </column>
+            <column name="ip" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="port" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timeout" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_type_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="modality" baseColumnNames="order_type_id" constraintName="fk_modality_order_type"
+                                 referencedTableName="order_type"
+                                 referencedColumnNames="order_type_id"/>
+    </changeSet>
+
+    <changeSet id="radiology-201506250516" author="dipakthapa">
+        <comment>Creating order details table</comment>
+        <createTable tableName="order_logs">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="order_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modality_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hl7_request" type="VARCHAR(65535)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hl7_response" type="VARCHAR(65535)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="order_logs" baseColumnNames="order_id" constraintName="fk_order_log_order_id"
+                                 referencedTableName="orders"
+                                 referencedColumnNames="order_id"/>
+        <addForeignKeyConstraint baseTableName="order_logs" baseColumnNames="modality_id" constraintName="fk_order_log_modality_id"
+                                 referencedTableName="modality"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
 
 </databaseChangeLog>
