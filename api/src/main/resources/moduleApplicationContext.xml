@@ -68,17 +68,6 @@
         <property name="transactionAttributeSource" ref="transactionAttributeSource"/>
     </bean>
 
-    <bean id="modalityOrderTypeService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="target">
-            <bean class="org.openmrs.module.radiology.api.service.impl.ModalityOrderTypeServiceImpl">
-                <property name="modalityOrderTypeDao" ref="modalityOrderTypeDao"/>
-            </bean>
-        </property>
-        <property name="preInterceptors" ref="serviceInterceptors"/>
-        <property name="transactionAttributeSource" ref="transactionAttributeSource"/>
-    </bean>
-
     <bean id="orderLogsService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target">
