@@ -41,7 +41,7 @@ public class PacsIntegrationServiceImpl {
     public String sendMessage(AbstractMessage message, Integer orderTypeId) throws HL7Exception, LLPException, IOException {
         Optional<Modality> modalityRecord = modalityService.getByOrderTypeId(orderTypeId);
 
-        if (modalityRecord.isEmpty()) {
+        if (!modalityRecord.isPresent()) {
             throw new ModalityException("No modality record found.", null);
         }
         Modality modality = modalityRecord.get();

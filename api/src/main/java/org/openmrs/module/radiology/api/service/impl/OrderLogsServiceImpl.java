@@ -43,5 +43,6 @@ public class OrderLogsServiceImpl implements OrderLogsService {
         orderLog.setHl7Request(hl7Request);
         orderLog.setHl7Response(hl7Response);
         orderLog.setModality(modality);
+        return orderLogsDao.saveOrUpdate(orderLog);
     }
 } 
