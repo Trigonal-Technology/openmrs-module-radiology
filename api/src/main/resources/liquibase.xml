@@ -221,7 +221,7 @@
                                  referencedColumnNames="order_type_id"/>
     </changeSet>
 
-    <changeSet id="radiology-201506250516" author="dipakthapa">
+    <changeSet id="radiology-202411011100" author="dipakthapa">
         <comment>Creating order details table</comment>
         <createTable tableName="order_logs">
             <column name="id" type="int" autoIncrement="true">
@@ -248,5 +248,13 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="radiology-202411011200" author="dipakthapa">
+        <comment>Insert data for concept source with name PACS Procedure Code</comment>
+        <insert tableName="concept_source">
+            <column name="source_id" value="1"/> <!-- Assuming source_id is an auto-incremented primary key -->
+            <column name="name" value="PACS Procedure Code"/>
+            <column name="description" value="Source for PACS procedure codes."/> <!-- Optional description -->
+        </insert>
+    </changeSet>
 
 </databaseChangeLog>

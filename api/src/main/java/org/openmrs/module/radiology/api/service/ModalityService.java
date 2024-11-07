@@ -6,7 +6,5 @@ import org.openmrs.module.radiology.api.model.Modality;
 
 public interface ModalityService {
     
-    Optional<Modality> get(@NotNull int id);
-    
-    Modality saveOrUpdate(@NotNull Modality modality);
+    Optional<Modality> getByOrderTypeId(@NotNull int orderTypeId);
 } 

@@ -19,6 +19,7 @@ public class RadiologyOrderCreateBeforeAdvice implements MethodBeforeAdvice {
     public void before(Method method, Object[] args, Object target) throws Throwable {
         LOG.info("Inside RadiologyOrderCreateBeforeAdvice > before method");
         OrderService orderService = Context.getOrderService();
+
         try {
             // Extract the Order object from the arguments
             if (method.getName().equals("saveOrder") && args.length > 0 && args[0] instanceof Order) {

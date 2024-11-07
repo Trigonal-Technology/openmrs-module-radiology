@@ -25,15 +25,12 @@ public class ModalityDaoImpl implements ModalityDao {
     }
 
     @Override
-    public Optional<Modality> get(int id) {
-        LOG.info("Inside get Modality");
-        return Optional.ofNullable(getCurrentSession().get(Modality.class, id));
-    }
-
-    @Override
-    public Modality saveOrUpdate(Modality modality) {
-        LOG.info("Inside saveOrUpdate Modality");
-        getCurrentSession().saveOrUpdate(modality);
-        return modality;
+    public Optional<Modality> getByOrderTypeId(int orderTypeId) {
+        LOG.info("Fetching Modality by order_type_id: " + orderTypeId);
+        return Optional.ofNullable(getCurrentSession()
+            .createQuery("FROM Modality m WHERE m.orderType.id = :orderTypeId", Modality.class)
+            .setParameter("orderTypeId", orderTypeId)
+            .setMaxResults(1) // Fetch the first record
+            .uniqueResult());
     }
 } 

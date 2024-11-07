@@ -100,6 +100,17 @@
 				<version>${slf4jVersion}</version>
 			</dependency>
 
+            <dependency>
+                <groupId>ca.uhn.hapi</groupId>
+                <artifactId>hapi-base</artifactId>
+                <version>2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>ca.uhn.hapi</groupId>
+                <artifactId>hapi-structures-v26</artifactId>
+                <version>2.1</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

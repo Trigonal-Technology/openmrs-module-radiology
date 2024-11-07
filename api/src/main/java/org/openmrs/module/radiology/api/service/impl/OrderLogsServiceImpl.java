@@ -3,7 +3,9 @@ package org.openmrs.module.radiology.api.service.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.radiology.api.dao.OrderLogsDao;
+import org.openmrs.module.radiology.api.model.Modality;
 import org.openmrs.module.radiology.api.model.OrderLogs;
+import org.openmrs.module.radiology.api.model.RadiologyOrder;
 import org.openmrs.module.radiology.api.service.OrderLogsService;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +33,15 @@ public class OrderLogsServiceImpl implements OrderLogsService {
     public OrderLogs saveOrUpdate(OrderLogs orderLogs) {
         LOG.info("Inside saveOrUpdate OrderLogs");
         return orderLogsDao.saveOrUpdate(orderLogs);
+    }
+
+    @Override
+    public OrderLogs save(RadiologyOrder order, String hl7Request, String hl7Response, Modality modality) {
+        LOG.info("Inside saveOrUpdate OrderLogs");
+        OrderLogs orderLog = new OrderLogs();
+        orderLog.setOrder(order);
+        orderLog.setHl7Request(hl7Request);
+        orderLog.setHl7Response(hl7Response);
+        orderLog.setModality(modality);
     }
 } 

@@ -14,6 +14,10 @@ public class ModalityException extends RuntimeException {
     }
 
     public String getMessage() {
-        return "Unable to send the message to the modality \n" + modality.toString() + "\n" + responseMessage;
+        if (this.modality == null) {
+            return "Unable to send the message to the modality \n" + responseMessage;
+        } else {
+            return "Unable to send the message to the modality \n" + modality.toString() + "\n" + responseMessage;
+        }
     }
 }

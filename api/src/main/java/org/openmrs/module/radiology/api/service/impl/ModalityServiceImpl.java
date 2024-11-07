@@ -11,7 +11,6 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Transactional
-@Service
 public class ModalityServiceImpl implements ModalityService {
     private static final Log LOG = LogFactory.getLog(ModalityServiceImpl.class);
 
@@ -22,14 +21,8 @@ public class ModalityServiceImpl implements ModalityService {
     }
 
     @Override
-    public Optional<Modality> get(int id) {
-        LOG.info("Inside get Modality");
-        return modalityDao.get(id);
+    public Optional<Modality> getByOrderTypeId(int orderTypeId) {
+        LOG.info("Fetching Modality by order_type_id: " + orderTypeId);
+        return modalityDao.getByOrderTypeId(orderTypeId);
     }
-
-    @Override
-    public Modality saveOrUpdate(Modality modality) {
-        LOG.info("Inside saveOrUpdate Modality");
-        return modalityDao.saveOrUpdate(modality);
-    }
-} 
+}
