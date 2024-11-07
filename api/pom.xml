@@ -19,20 +19,14 @@
 			<artifactId>openmrs-api</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>ca.uhn.hapi</groupId>
-			<artifactId>hapi-base</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>xml-apis</artifactId>
-					<groupId>xml-apis</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>ca.uhn.hapi</groupId>
-			<artifactId>hapi-structures-v26</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>ca.uhn.hapi</groupId>-->
+<!--			<artifactId>hapi-base</artifactId>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>ca.uhn.hapi</groupId>-->
+<!--			<artifactId>hapi-structures-v25</artifactId>-->
+<!--		</dependency>-->
 
 		<!--Test dependencies-->
 		<dependency>

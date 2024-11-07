@@ -7,7 +7,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.api.enums.RadiologyOrderStatus;
 import org.openmrs.module.radiology.api.model.RadiologyOrder;
 import org.openmrs.module.radiology.api.model.RadiologyOrderQueue;
-import org.openmrs.module.radiology.api.service.PacsIntegrationService;
+//import org.openmrs.module.radiology.api.service.PacsIntegrationService;
 import org.openmrs.module.radiology.api.service.RadiologyOrderQueueService;
 import org.springframework.aop.AfterReturningAdvice;
 
