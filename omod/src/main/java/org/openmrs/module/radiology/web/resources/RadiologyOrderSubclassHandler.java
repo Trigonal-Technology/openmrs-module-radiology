@@ -1,8 +1,5 @@
 package org.openmrs.module.radiology.web.resources;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.swagger.models.Model;
 import io.swagger.models.ModelImpl;
 import io.swagger.models.properties.IntegerProperty;
@@ -11,7 +8,6 @@ import io.swagger.models.properties.StringProperty;
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.api.enums.RadiologyOrderStatus;
-import org.openmrs.module.radiology.api.model.Radiology;
 import org.openmrs.module.radiology.api.model.RadiologyOrder;
 import org.openmrs.module.webservices.docs.swagger.core.property.EnumProperty;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -29,6 +25,9 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingSubclassH
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SubClassHandler(supportedClass = RadiologyOrder.class, supportedOpenmrsVersions = { "2.6.* - 9.*" })
 public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler<Order, RadiologyOrder> implements DelegatingSubclassHandler<Order, RadiologyOrder> {
@@ -83,7 +82,6 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 			d.addProperty("bodySite", Representation.REF);
 			d.addProperty("radiologyStatus");
 			d.addProperty("relatedRadiologyOrder", Representation.REF);
-			d.addProperty("radiologyOrders", Representation.REF);
 			return d;
 		} else if (rep instanceof FullRepresentation) {
 			OrderResource2_5 orderResource = (OrderResource2_5) Context.getService(RestService.class)
@@ -98,24 +96,11 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 			d.addProperty("bodySite", Representation.FULL);
 			d.addProperty("radiologyStatus");
 			d.addProperty("relatedRadiologyOrder", Representation.FULL);
-			d.addProperty("radiologyOrders", Representation.FULL);
 			return d;
 		} else if (rep instanceof CustomRepresentation) { // custom rep
 			return null;
 		}
 		return null;
-	}
-	
-	@PropertyGetter(value = "radiologyOrders")
-	public List<Radiology> getRadiologyOrders(RadiologyOrder instance) {
-		LOGGER.info("Inside getRadiologyOrders");
-		try {
-			List<Radiology> radiologyOrders = new ArrayList<>(instance.getRadiologyOrders());
-			return radiologyOrders;
-		}
-		catch (Exception e) {
-			return new ArrayList<>();
-		}
 	}
 	
 	@Override
