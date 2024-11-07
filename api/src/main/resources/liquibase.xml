@@ -62,6 +62,7 @@
     </changeSet>
 
     <changeSet id="radiology-202410251530" author="dipakthapa">
+        <comment>Insert Radiology Order Type</comment>
         <insert tableName="order_type">
             <column name="order_type_id" valueNumeric="11"/>
             <column name="name" value="Radiology Order"/>
@@ -79,6 +80,7 @@
     <include file="radiology_data.xml"/>
 
     <changeSet id="radiology-202410252100" author="dipakthapa">
+        <comment>Create Radiology Order Queue</comment>
         <createTable tableName="radiology_order_queue">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -145,38 +147,42 @@
     </changeSet>
 
     <changeSet id="radiology-202411011100" author="dipakthapa">
-        <comment>Creating order details table</comment>
+        <comment>Creating order request log table</comment>
         <createTable tableName="order_log">
             <column name="id" type="int" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="order_id" type="int">
+            <column name="radiology_order_id" type="int">
                 <constraints nullable="false"/>
             </column>
             <column name="modality_id" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="hl7_request" type="VARCHAR(65535)">
+            <column name="hl7_request" type="text">
                 <constraints nullable="false"/>
             </column>
-            <column name="hl7_response" type="VARCHAR(65535)">
+            <column name="hl7_response" type="text">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseTableName="order_logs" baseColumnNames="order_id" constraintName="fk_order_log_order_id"
+        <addForeignKeyConstraint baseTableName="order_log"
+                                 baseColumnNames="radiology_order_id"
                                  referencedTableName="radiology_order"
-                                 referencedColumnNames="order_id"/>
-        <addForeignKeyConstraint baseTableName="order_logs" baseColumnNames="modality_id" constraintName="fk_order_log_modality_id"
+                                 referencedColumnNames="order_id"
+                                 constraintName="fk_order_log_radiology_order"/>
+        <addForeignKeyConstraint baseTableName="order_log" baseColumnNames="modality_id" constraintName="fk_order_log_modality_id"
                                  referencedTableName="modality"
                                  referencedColumnNames="id"/>
     </changeSet>
 
     <changeSet id="radiology-202411011200" author="dipakthapa">
         <comment>Insert data for concept source with name PACS Procedure Code</comment>
-        <insert tableName="concept_source">
-            <column name="source_id" value="1"/> <!-- Assuming source_id is an auto-incremented primary key -->
+        <insert tableName="concept_reference_source">
             <column name="name" value="PACS Procedure Code"/>
-            <column name="description" value="Source for PACS procedure codes."/> <!-- Optional description -->
+            <column name="description" value="Source for PACS procedure codes."/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="uuid" valueComputed="uuid()"/>
         </insert>
     </changeSet>
 

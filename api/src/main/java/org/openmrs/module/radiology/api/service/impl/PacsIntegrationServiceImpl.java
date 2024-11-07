@@ -17,6 +17,7 @@ import org.openmrs.module.radiology.api.model.Modality;
 import org.openmrs.module.radiology.api.model.RadiologyOrder;
 import org.openmrs.module.radiology.api.service.ModalityService;
 import org.openmrs.module.radiology.api.service.OrderLogService;
+import org.openmrs.module.radiology.api.service.PacsHL7Service;
 import org.openmrs.module.radiology.api.service.PacsIntegrationService;
 
 import javax.transaction.Transactional;
@@ -27,12 +28,18 @@ import java.util.Optional;
 public class PacsIntegrationServiceImpl implements PacsIntegrationService {
 
     private ModalityService modalityService;
-    private HL7ServiceImpl hl7Service;
+    private PacsHL7Service pacsHL7Service;
     private OrderLogService orderLogService;
 
-    public void setRadiologyDao(ModalityService modalityService, HL7ServiceImpl hl7Service, OrderLogService orderLogService) {
+    public void setModalityService(ModalityService modalityService) {
         this.modalityService = modalityService;
-        this.hl7Service = hl7Service;
+    }
+
+    public void setPacsHL7Service(PacsHL7Service pacsHL7Service) {
+        this.pacsHL7Service = pacsHL7Service;
+    }
+
+    public void setOrderLogService(OrderLogService orderLogService) {
         this.orderLogService = orderLogService;
     }
 
@@ -79,13 +86,13 @@ public class PacsIntegrationServiceImpl implements PacsIntegrationService {
 
     @Override
     public void processOrder(RadiologyOrder radiologyOrder) throws HL7Exception, LLPException, IOException {
-        AbstractMessage request = hl7Service.createMessage(radiologyOrder);
+        AbstractMessage request = pacsHL7Service.createMessage(radiologyOrder);
         Optional<Modality> modalityRecord = modalityService.getByOrderTypeId(radiologyOrder.getOrderType().getOrderTypeId());
         if (!modalityRecord.isPresent()) {
             throw new ModalityException("No modality record found.", null);
         }
         String response = sendMessage(request, modalityRecord.get());
 
-        orderLogService.save(radiologyOrder, request.encode(), response, null);
+        orderLogService.save(radiologyOrder, request.encode(), response, modalityRecord.get());
     }
 }

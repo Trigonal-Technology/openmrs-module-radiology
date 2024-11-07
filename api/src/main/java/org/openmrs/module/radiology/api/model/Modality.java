@@ -1,10 +1,8 @@
 package org.openmrs.module.radiology.api.model;
 
-import javax.persistence.*;
-
 import org.openmrs.OrderType;
 
-import java.util.List;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "modality")

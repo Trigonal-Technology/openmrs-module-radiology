@@ -13,26 +13,25 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Transactional
-@Service
 public class OrderLogServiceImpl implements OrderLogService {
     private static final Log LOG = LogFactory.getLog(OrderLogServiceImpl.class);
 
-    private OrderLogDao orderLogsDao;
+    private OrderLogDao orderLogDao;
 
-    public void setOrderLogsDao(OrderLogDao orderLogsDao) {
-        this.orderLogsDao = orderLogsDao;
+    public void setOrderLogDao(OrderLogDao orderLogDao) {
+        this.orderLogDao = orderLogDao;
     }
 
     @Override
     public Optional<OrderLog> get(int id) {
         LOG.info("Inside get OrderLogs");
-        return orderLogsDao.get(id);
+        return orderLogDao.get(id);
     }
 
     @Override
     public OrderLog saveOrUpdate(OrderLog orderLogs) {
         LOG.info("Inside saveOrUpdate OrderLogs");
-        return orderLogsDao.saveOrUpdate(orderLogs);
+        return orderLogDao.saveOrUpdate(orderLogs);
     }
 
     @Override
@@ -43,6 +42,6 @@ public class OrderLogServiceImpl implements OrderLogService {
         orderLog.setHl7Request(hl7Request);
         orderLog.setHl7Response(hl7Response);
         orderLog.setModality(modality);
-        return orderLogsDao.saveOrUpdate(orderLog);
+        return orderLogDao.saveOrUpdate(orderLog);
     }
 } 

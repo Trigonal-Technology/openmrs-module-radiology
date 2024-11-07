@@ -12,7 +12,7 @@ public class OrderLog {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "radiology_order_id")
     private RadiologyOrder order;
 
     @ManyToOne

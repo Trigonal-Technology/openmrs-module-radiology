@@ -15,13 +15,13 @@ import org.openmrs.Provider;
 import org.openmrs.module.radiology.api.constants.Constants;
 import org.openmrs.module.radiology.api.exception.HL7MessageException;
 import org.openmrs.module.radiology.api.model.RadiologyOrder;
-import org.openmrs.module.radiology.api.service.HL7Service;
+import org.openmrs.module.radiology.api.service.PacsHL7Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class HL7ServiceImpl implements HL7Service {
+public class PacsHL7ServiceImpl implements PacsHL7Service {
 
     @Override
     public AbstractMessage createMessage(RadiologyOrder order) throws DataTypeException {

@@ -6,11 +6,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.openmrs.module.radiology.api.dao.OrderLogDao;
 import org.openmrs.module.radiology.api.model.OrderLog;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public class OrderLogDaoImpl implements OrderLogDao {
     private static final Log LOG = LogFactory.getLog(OrderLogDaoImpl.class);
     

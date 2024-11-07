@@ -7,8 +7,8 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.api.enums.RadiologyOrderStatus;
 import org.openmrs.module.radiology.api.model.RadiologyOrder;
 import org.openmrs.module.radiology.api.model.RadiologyOrderQueue;
+import org.openmrs.module.radiology.api.service.PacsIntegrationService;
 import org.openmrs.module.radiology.api.service.RadiologyOrderQueueService;
-import org.openmrs.module.radiology.api.service.impl.PacsIntegrationServiceImpl;
 import org.springframework.aop.AfterReturningAdvice;
 
 import java.lang.reflect.Method;
@@ -18,7 +18,7 @@ public class RadiologyOrderCreateAfterAdvice implements AfterReturningAdvice {
     private static final Log LOG = LogFactory.getLog(RadiologyOrderCreateAfterAdvice.class);
 
     RadiologyOrderQueueService radiologyOrderQueueService = Context.getService(RadiologyOrderQueueService.class);
-    PacsIntegrationServiceImpl pacsService = Context.getService(PacsIntegrationServiceImpl.class);
+//    PacsIntegrationService pacsService = Context.getService(PacsIntegrationService.class);
 
 
     @Override
@@ -36,7 +36,7 @@ public class RadiologyOrderCreateAfterAdvice implements AfterReturningAdvice {
                     RadiologyOrderQueue queue = radiologyOrderQueueService.saveOrUpdate(radiologyOrder);
 
                     //Call pacs Service to send
-                    pacsService.processOrder(radiologyOrder);
+//                    pacsService.processOrder(radiologyOrder);
 
                     //Update record in radiologyQueueService with status
                     queue.setStatus(RadiologyOrderStatus.SENT);

@@ -16,12 +16,11 @@
   		    http://www.springframework.org/schema/util
   		    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-
     <!-- Wraps QueueService methods in DB transactions and OpenMRS interceptors,
     which set audit info like dateCreated, changedBy, etc.-->
 
     <context:annotation-config/>
-    <context:component-scan base-package="org.openmrs.module.radiology" />
+    <context:component-scan base-package="org.openmrs.module.radiology.api" />
 
     <!--DAO Beans -->
     <bean id="radiologyOrderQueueDao" class="org.openmrs.module.radiology.api.dao.impl.RadiologyOrderQueueDaoImpl">
@@ -54,94 +53,76 @@
         <property name="transactionAttributeSource" ref="transactionAttributeSource"/>
     </bean>
 
-    <bean id="modalityService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="target">
-            <bean class="org.openmrs.module.radiology.api.service.impl.ModalityServiceImpl">
-                <property name="modalityDao" ref="modalityDao"/>
-            </bean>
-        </property>
-        <property name="preInterceptors" ref="serviceInterceptors"/>
-        <property name="transactionAttributeSource" ref="transactionAttributeSource"/>
-    </bean>
+<!--    <bean id="modalityService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">-->
+<!--        <property name="transactionManager" ref="transactionManager"/>-->
+<!--        <property name="target">-->
+<!--            <bean class="org.openmrs.module.radiology.api.service.impl.ModalityServiceImpl">-->
+<!--                <property name="modalityDao" ref="modalityDao"/>-->
+<!--            </bean>-->
+<!--        </property>-->
+<!--        <property name="preInterceptors" ref="serviceInterceptors"/>-->
+<!--        <property name="transactionAttributeSource" ref="transactionAttributeSource"/>-->
+<!--    </bean>-->
 
-    <bean id="orderLogsService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="target">
-            <bean class="org.openmrs.module.radiology.api.service.impl.OrderLogsServiceImpl">
-                <property name="orderLogsDao" ref="orderLogsDao"/>
-            </bean>
-        </property>
-        <property name="preInterceptors" ref="serviceInterceptors"/>
-        <property name="transactionAttributeSource" ref="transactionAttributeSource"/>
-    </bean>
+<!--    <bean id="orderLogService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">-->
+<!--        <property name="transactionManager" ref="transactionManager"/>-->
+<!--        <property name="target">-->
+<!--            <bean class="org.openmrs.module.radiology.api.service.impl.OrderLogServiceImpl">-->
+<!--                <property name="orderLogDao" ref="orderLogDao"/>-->
+<!--            </bean>-->
+<!--        </property>-->
+<!--        <property name="preInterceptors" ref="serviceInterceptors"/>-->
+<!--        <property name="transactionAttributeSource" ref="transactionAttributeSource"/>-->
+<!--    </bean>-->
 
-    <bean id="hl7Service" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="target">
-            <bean class="org.openmrs.module.radiology.api.service.impl.HL7ServiceImpl"/>
-        </property>
-        <property name="preInterceptors" ref="serviceInterceptors"/>
-        <property name="transactionAttributeSource" ref="transactionAttributeSource"/>
-    </bean>
+<!--    <bean id="pacsHL7Service" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">-->
+<!--        <property name="transactionManager" ref="transactionManager"/>-->
+<!--        <property name="target">-->
+<!--            <bean class="org.openmrs.module.radiology.api.service.impl.PacsHL7ServiceImpl"/>-->
+<!--        </property>-->
+<!--        <property name="preInterceptors" ref="serviceInterceptors"/>-->
+<!--        <property name="transactionAttributeSource" ref="transactionAttributeSource"/>-->
+<!--    </bean>-->
 
-    <bean id="pacsIntegrationService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="target">
-            <bean class="org.openmrs.module.radiology.api.service.impl.PacsIntegrationServiceImpl">
-                <property name="modalityService" ref="modalityService"/>
-                <property name="hl7Service" ref="hl7Service"/>
-                <property name="orderLogService" ref="orderLogsService"/>
-            </bean>
-        </property>
-        <property name="preInterceptors" ref="serviceInterceptors"/>
-        <property name="transactionAttributeSource" ref="transactionAttributeSource"/>
-    </bean>
+<!--    <bean id="pacsIntegrationService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">-->
+<!--        <property name="transactionManager" ref="transactionManager"/>-->
+<!--        <property name="target">-->
+<!--            <bean class="org.openmrs.module.radiology.api.service.impl.PacsIntegrationServiceImpl">-->
+<!--                <property name="modalityService" ref="modalityService"/>-->
+<!--                <property name="pacsHL7Service" ref="pacsHL7Service"/>-->
+<!--                <property name="orderLogService" ref="orderLogService"/>-->
+<!--            </bean>-->
+<!--        </property>-->
+<!--        <property name="preInterceptors" ref="serviceInterceptors"/>-->
+<!--        <property name="transactionAttributeSource" ref="transactionAttributeSource"/>-->
+<!--    </bean>-->
 
     <!--Register service beans to context-->
-    <bean parent="serviceContext">
-        <property name="moduleService">
-            <list>
-                <value>org.openmrs.module.radiology.api.service.RadiologyService</value>
-                <ref bean="radiologyService"/>
-            </list>
-        </property>
-    </bean>
+<!--    <bean parent="serviceContext">-->
+<!--        <property name="moduleService">-->
+<!--            <list>-->
+<!--                <value>org.openmrs.module.radiology.api.service.RadiologyOrderQueueService</value>-->
+<!--                <ref bean="radiologyOrderQueueService"/>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--    </bean>-->
 
-    <bean parent="serviceContext">
-        <property name="moduleService">
-            <list>
-                <value>org.openmrs.module.radiology.api.service.RadiologyOrderQueueService</value>
-                <ref bean="radiologyOrderQueueService"/>
-            </list>
-        </property>
-    </bean>
+<!--    <bean parent="serviceContext">-->
+<!--        <property name="moduleService">-->
+<!--            <list>-->
+<!--                <value>org.openmrs.module.radiology.api.service.PacsHL7Service</value>-->
+<!--                <ref bean="pacsHL7Service"/>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--    </bean>-->
 
-    <bean parent="serviceContext">
-        <property name="moduleService">
-            <list>
-                <value>org.openmrs.module.radiology.api.service.RadiologyOrderService</value>
-                <ref bean="radiologyOrderService"/>
-            </list>
-        </property>
-    </bean>
-
-    <bean parent="serviceContext">
-        <property name="moduleService">
-            <list>
-                <value>org.openmrs.module.radiology.api.service.HL7Service</value>
-                <ref bean="hl7Service"/>
-            </list>
-        </property>
-    </bean>
-
-    <bean parent="serviceContext">
-        <property name="moduleService">
-            <list>
-                <value>org.openmrs.module.radiology.api.service.PacsIntegrationService</value>
-                <ref bean="pacsIntegrationService"/>
-            </list>
-        </property>
-    </bean>
+<!--    <bean parent="serviceContext">-->
+<!--        <property name="moduleService">-->
+<!--            <list>-->
+<!--                <value>org.openmrs.module.radiology.api.service.PacsIntegrationService</value>-->
+<!--                <ref bean="pacsIntegrationService"/>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--    </bean>-->
 
 </beans>

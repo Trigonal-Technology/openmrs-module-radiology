@@ -6,11 +6,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.openmrs.module.radiology.api.dao.ModalityDao;
 import org.openmrs.module.radiology.api.model.Modality;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public class ModalityDaoImpl implements ModalityDao {
     private static final Log LOG = LogFactory.getLog(ModalityDaoImpl.class);
     
