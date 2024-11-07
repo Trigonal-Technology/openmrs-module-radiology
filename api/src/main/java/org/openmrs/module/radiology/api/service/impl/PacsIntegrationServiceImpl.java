@@ -8,25 +8,21 @@ import ca.uhn.hl7v2.app.Connection;
 import ca.uhn.hl7v2.app.Initiator;
 import ca.uhn.hl7v2.llp.LLPException;
 import ca.uhn.hl7v2.model.AbstractMessage;
-import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v25.message.ACK;
 import ca.uhn.hl7v2.model.v25.message.ORR_O02;
 import ca.uhn.hl7v2.parser.PipeParser;
-import org.openmrs.module.radiology.api.dao.OrderLogsDao;
-import org.openmrs.module.radiology.api.dao.RadiologyDao;
 import org.openmrs.module.radiology.api.exception.ModalityException;
 import org.openmrs.module.radiology.api.model.Modality;
-import org.openmrs.module.radiology.api.model.OrderLogs;
 import org.openmrs.module.radiology.api.model.RadiologyOrder;
 import org.openmrs.module.radiology.api.service.ModalityService;
 import org.openmrs.module.radiology.api.service.OrderLogsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.openmrs.module.radiology.api.service.PacsIntegrationService;
 
 import java.io.IOException;
 import java.util.Optional;
 
-public class PacsIntegrationServiceImpl {
+public class PacsIntegrationServiceImpl implements PacsIntegrationService {
 
     private ModalityService modalityService;
     private HL7ServiceImpl hl7Service;
@@ -38,26 +34,18 @@ public class PacsIntegrationServiceImpl {
         this.orderLogsService = orderLogsService;
     }
 
-    public String sendMessage(AbstractMessage message, Integer orderTypeId) throws HL7Exception, LLPException, IOException {
-        Optional<Modality> modalityRecord = modalityService.getByOrderTypeId(orderTypeId);
-
-        if (!modalityRecord.isPresent()) {
-            throw new ModalityException("No modality record found.", null);
-        }
-        Modality modality = modalityRecord.get();
+    public String sendMessage(AbstractMessage message, Modality modality) throws HL7Exception, LLPException, IOException {
         Message response = post(modality, message);
         String responseMessage = parseResponse(response);
         if (response instanceof ORR_O02) {
             ORR_O02 acknowledgement = (ORR_O02) response;
             String acknowledgmentCode = acknowledgement.getMSA().getAcknowledgmentCode().getValue();
             processAcknowledgement(modality, responseMessage, acknowledgmentCode);
-        }
-        else if (response instanceof ACK) {
+        } else if (response instanceof ACK) {
             ACK acknowledgement = (ACK) response;
             String acknowledgmentCode = acknowledgement.getMSA().getAcknowledgmentCode().getValue();
             processAcknowledgement(modality, responseMessage, acknowledgmentCode);
-        }
-        else {
+        } else {
             throw new ModalityException(responseMessage, modality);
         }
         return responseMessage;
@@ -87,9 +75,14 @@ public class PacsIntegrationServiceImpl {
         }
     }
 
+    @Override
     public void processOrder(RadiologyOrder radiologyOrder) throws HL7Exception, LLPException, IOException {
         AbstractMessage request = hl7Service.createMessage(radiologyOrder);
-        String response = sendMessage(request, radiologyOrder.getOrderType().getId());
+        Optional<Modality> modalityRecord = modalityService.getByOrderTypeId(radiologyOrder.getOrderType().getOrderTypeId());
+        if (!modalityRecord.isPresent()) {
+            throw new ModalityException("No modality record found.", null);
+        }
+        String response = sendMessage(request, modalityRecord.get());
 
         orderLogsService.save(radiologyOrder, request.encode(), response, null);
     }

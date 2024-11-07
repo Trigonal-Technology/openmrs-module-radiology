@@ -1,13 +1,9 @@
 package org.openmrs.module.radiology.api.model;
 
-import java.util.Set;
-
 import org.openmrs.Concept;
 import org.openmrs.ServiceOrder;
 import org.openmrs.module.radiology.api.enums.RadiologyOrderStatus;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.PrePersist;
 
 public class RadiologyOrder extends ServiceOrder {
@@ -19,8 +15,6 @@ public class RadiologyOrder extends ServiceOrder {
 	private Concept bodySite;
 
 	private RadiologyOrder relatedRadiologyOrder;
-
-	private Set<Radiology> radiologyOrders;
 
 	private RadiologyOrderStatus radiologyStatus;
 
@@ -82,14 +76,6 @@ public class RadiologyOrder extends ServiceOrder {
 
 	public void setBodySite(Concept bodySite) {
 		this.bodySite = bodySite;
-	}
-
-	public Set<Radiology> getRadiologyOrders() {
-		return radiologyOrders;
-	}
-
-	public void setRadiologyOrders(Set<Radiology> radiologyOrders) {
-		this.radiologyOrders = radiologyOrders;
 	}
 
 	public RadiologyOrder getRelatedRadiologyOrder() {

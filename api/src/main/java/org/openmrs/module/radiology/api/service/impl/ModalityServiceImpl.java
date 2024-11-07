@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.radiology.api.dao.ModalityDao;
 import org.openmrs.module.radiology.api.model.Modality;
 import org.openmrs.module.radiology.api.service.ModalityService;
-import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
