@@ -16,22 +16,24 @@ import org.openmrs.module.radiology.api.exception.ModalityException;
 import org.openmrs.module.radiology.api.model.Modality;
 import org.openmrs.module.radiology.api.model.RadiologyOrder;
 import org.openmrs.module.radiology.api.service.ModalityService;
-import org.openmrs.module.radiology.api.service.OrderLogsService;
+import org.openmrs.module.radiology.api.service.OrderLogService;
 import org.openmrs.module.radiology.api.service.PacsIntegrationService;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Optional;
 
+@Transactional
 public class PacsIntegrationServiceImpl implements PacsIntegrationService {
 
     private ModalityService modalityService;
     private HL7ServiceImpl hl7Service;
-    private OrderLogsService orderLogsService;
+    private OrderLogService orderLogService;
 
-    public void setRadiologyDao(ModalityService modalityService, HL7ServiceImpl hl7Service, OrderLogsService orderLogsService) {
+    public void setRadiologyDao(ModalityService modalityService, HL7ServiceImpl hl7Service, OrderLogService orderLogService) {
         this.modalityService = modalityService;
         this.hl7Service = hl7Service;
-        this.orderLogsService = orderLogsService;
+        this.orderLogService = orderLogService;
     }
 
     public String sendMessage(AbstractMessage message, Modality modality) throws HL7Exception, LLPException, IOException {
@@ -84,6 +86,6 @@ public class PacsIntegrationServiceImpl implements PacsIntegrationService {
         }
         String response = sendMessage(request, modalityRecord.get());
 
-        orderLogsService.save(radiologyOrder, request.encode(), response, null);
+        orderLogService.save(radiologyOrder, request.encode(), response, null);
     }
 }

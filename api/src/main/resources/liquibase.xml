@@ -146,7 +146,7 @@
 
     <changeSet id="radiology-202411011100" author="dipakthapa">
         <comment>Creating order details table</comment>
-        <createTable tableName="order_logs">
+        <createTable tableName="order_log">
             <column name="id" type="int" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>

@@ -2,11 +2,11 @@ package org.openmrs.module.radiology.api.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.module.radiology.api.dao.OrderLogsDao;
+import org.openmrs.module.radiology.api.dao.OrderLogDao;
 import org.openmrs.module.radiology.api.model.Modality;
-import org.openmrs.module.radiology.api.model.OrderLogs;
+import org.openmrs.module.radiology.api.model.OrderLog;
 import org.openmrs.module.radiology.api.model.RadiologyOrder;
-import org.openmrs.module.radiology.api.service.OrderLogsService;
+import org.openmrs.module.radiology.api.service.OrderLogService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,31 +14,31 @@ import java.util.Optional;
 
 @Transactional
 @Service
-public class OrderLogsServiceImpl implements OrderLogsService {
-    private static final Log LOG = LogFactory.getLog(OrderLogsServiceImpl.class);
+public class OrderLogServiceImpl implements OrderLogService {
+    private static final Log LOG = LogFactory.getLog(OrderLogServiceImpl.class);
 
-    private OrderLogsDao orderLogsDao;
+    private OrderLogDao orderLogsDao;
 
-    public void setOrderLogsDao(OrderLogsDao orderLogsDao) {
+    public void setOrderLogsDao(OrderLogDao orderLogsDao) {
         this.orderLogsDao = orderLogsDao;
     }
 
     @Override
-    public Optional<OrderLogs> get(int id) {
+    public Optional<OrderLog> get(int id) {
         LOG.info("Inside get OrderLogs");
         return orderLogsDao.get(id);
     }
 
     @Override
-    public OrderLogs saveOrUpdate(OrderLogs orderLogs) {
+    public OrderLog saveOrUpdate(OrderLog orderLogs) {
         LOG.info("Inside saveOrUpdate OrderLogs");
         return orderLogsDao.saveOrUpdate(orderLogs);
     }
 
     @Override
-    public OrderLogs save(RadiologyOrder order, String hl7Request, String hl7Response, Modality modality) {
+    public OrderLog save(RadiologyOrder order, String hl7Request, String hl7Response, Modality modality) {
         LOG.info("Inside saveOrUpdate OrderLogs");
-        OrderLogs orderLog = new OrderLogs();
+        OrderLog orderLog = new OrderLog();
         orderLog.setOrder(order);
         orderLog.setHl7Request(hl7Request);
         orderLog.setHl7Response(hl7Response);

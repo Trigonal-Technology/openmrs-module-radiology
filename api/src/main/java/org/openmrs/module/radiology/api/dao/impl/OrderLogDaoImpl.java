@@ -4,15 +4,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.openmrs.module.radiology.api.dao.OrderLogsDao;
-import org.openmrs.module.radiology.api.model.OrderLogs;
+import org.openmrs.module.radiology.api.dao.OrderLogDao;
+import org.openmrs.module.radiology.api.model.OrderLog;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public class OrderLogsDaoImpl implements OrderLogsDao {
-    private static final Log LOG = LogFactory.getLog(OrderLogsDaoImpl.class);
+public class OrderLogDaoImpl implements OrderLogDao {
+    private static final Log LOG = LogFactory.getLog(OrderLogDaoImpl.class);
     
     private SessionFactory sessionFactory;
 
@@ -25,13 +25,13 @@ public class OrderLogsDaoImpl implements OrderLogsDao {
     }
 
     @Override
-    public Optional<OrderLogs> get(int id) {
+    public Optional<OrderLog> get(int id) {
         LOG.info("Inside get OrderLogs");
-        return Optional.ofNullable(getCurrentSession().get(OrderLogs.class, id));
+        return Optional.ofNullable(getCurrentSession().get(OrderLog.class, id));
     }
 
     @Override
-    public OrderLogs saveOrUpdate(OrderLogs orderLogs) {
+    public OrderLog saveOrUpdate(OrderLog orderLogs) {
         LOG.info("Inside saveOrUpdate OrderLogs");
         getCurrentSession().saveOrUpdate(orderLogs);
         return orderLogs;
