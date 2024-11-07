@@ -3,7 +3,7 @@ package org.openmrs.module.radiology.api.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "order_logs")
+@Table(name = "order_log")
 public class OrderLog {
     
     @Id

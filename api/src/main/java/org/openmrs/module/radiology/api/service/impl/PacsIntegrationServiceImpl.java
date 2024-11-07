@@ -24,7 +24,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Optional;
 
-@Transactional
+//@Transactional
 public class PacsIntegrationServiceImpl implements PacsIntegrationService {
 
     private ModalityService modalityService;
