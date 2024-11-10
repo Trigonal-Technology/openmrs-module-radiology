@@ -8,6 +8,8 @@ import ca.uhn.hl7v2.model.v25.segment.MSH;
 import ca.uhn.hl7v2.model.v25.segment.OBR;
 import ca.uhn.hl7v2.model.v25.segment.ORC;
 import ca.uhn.hl7v2.model.v25.segment.PID;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.ConceptMap;
 import org.openmrs.Order;
 import org.openmrs.Patient;
@@ -22,9 +24,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PacsHL7ServiceImpl implements PacsHL7Service {
+    private static final Log LOG = LogFactory.getLog(PacsHL7ServiceImpl.class);
 
     @Override
     public AbstractMessage createMessage(RadiologyOrder order) throws DataTypeException {
+        LOG.error("Inside createMessage method ");
         if (Constants.ACTION_DISCONTINUE.equals(order.getAction().name())) {
             return createCancelOrderMessage(order);
         } else {
@@ -33,11 +37,13 @@ public class PacsHL7ServiceImpl implements PacsHL7Service {
     }
 
     private AbstractMessage createOrderMessage(RadiologyOrder order) throws DataTypeException {
+        LOG.error("Inside createOrderMessage method ");
         ORM_O01 message = createBaseMessage(order);
         ORC orc = message.getORDER().getORC();
         String orderNumber = order.getOrderNumber();
         validateOrderNumberSize(orderNumber);
-        populateOrcFields(orc, order, orderNumber, Constants.NEW_ORDER);
+//        populateOrcFields(orc, order, orderNumber, Constants.NEW_ORDER);
+        populateOrcFields(orc, order, orderNumber, Constants.SCHEDULED);
         addOBRComponent(order, message);
         return message;
     }
@@ -75,6 +81,9 @@ public class PacsHL7ServiceImpl implements PacsHL7Service {
         orc.getPlacerOrderNumber().getEntityIdentifier().setValue(orderNumber);
         orc.getFillerOrderNumber().getEntityIdentifier().setValue(orderNumber);
         orc.getEnteredBy(0).getGivenName().setValue(Constants.SENDER);
+//        orc.getOrderStatus().setValue("IP");
+        orc.getOrderStatus().setValue("A");
+        orc.getOrderingProvider(0).getGivenName().setValue(order.getOrderer().getName());
         orc.getOrderControl().setValue(orderControl);
     }
 
@@ -90,28 +99,54 @@ public class PacsHL7ServiceImpl implements PacsHL7Service {
 
     private void addOBRComponent(RadiologyOrder order, ORM_O01 message) throws DataTypeException {
         OBR obr = message.getORDER().getORDER_DETAIL().getOBR();
+
+        // Retrieve the PACS concept source for the radiology order
         ConceptMap pacsConceptSource = order.getConcept().getConceptMappings().stream()
-            .filter(map -> Constants.PACS_CONCEPT_SOURCE_NAME.equals(map.getConceptReferenceTerm().getConceptSource().getName()))
-            .findFirst()
-            .orElseThrow(() -> new HL7MessageException("Unable to create HL7 message. Missing concept source for order: " + order.getUuid()));
-        obr.getUniversalServiceIdentifier().getIdentifier().setValue(pacsConceptSource.getConceptReferenceTerm().getCode());
-        obr.getUniversalServiceIdentifier().getText().setValue(pacsConceptSource.getConceptReferenceTerm().getName());
-        obr.getReasonForStudy(0).getText().setValue(order.getCommentToFulfiller());
-        obr.getCollectorSComment(0).getText().setValue(order.getConcept().getName().getName());
+                .filter(map -> Constants.PACS_CONCEPT_SOURCE_NAME.equals(map.getConceptReferenceTerm().getConceptSource().getName()))
+                .findFirst()
+                .orElseThrow(() -> new HL7MessageException("Unable to create HL7 message. Missing concept source for order: " + order.getUuid()));
+
+        // Set the universal service identifier with the concept code and name
+//        obr.getUniversalServiceIdentifier().getIdentifier().setValue(pacsConceptSource.getConceptReferenceTerm().getCode());
+        obr.getUniversalServiceIdentifier().getIdentifier().setValue("SHLDR-AP");
+//        obr.getUniversalServiceIdentifier().getText().setValue(pacsConceptSource.getConceptReferenceTerm().getName());
+        obr.getUniversalServiceIdentifier().getText().setValue("SHOULDER CLAVICL-AP");
+
+        // Set the reason for study (comment intended for the fulfiller)
+        if (order.getCommentToFulfiller() != null) {
+            obr.getReasonForStudy(0).getText().setValue(order.getCommentToFulfiller());
+        }
+
+        // Set the collector's comment to include the concept name of the radiology order
+//        if (order.getConcept().getName() != null) {
+//            obr.getCollectorSComment(0).getText().setValue(order.getConcept().getName().getName());
+        obr.getCollectorSComment(0).getText().setValue("SHOULDER CLAVICL-AP");
+//        }
     }
+
 
     private void addProviderDetails(Provider provider, ORM_O01 message) throws DataTypeException {
         ORC orc = message.getORDER().getORC();
-        orc.getOrderingProvider(0).getGivenName().setValue(provider.getName());
+
+        // Set provider ID (UUID)
         orc.getOrderingProvider(0).getIDNumber().setValue(provider.getUuid());
+
+        // Set provider name
+        if (provider.getPerson().getGivenName() != null) {
+            orc.getOrderingProvider(0).getGivenName().setValue(provider.getPerson().getGivenName());
+        }
+        if (provider.getPerson().getFamilyName() != null) {
+            orc.getOrderingProvider(0).getFamilyName().getSurname().setValue(provider.getPerson().getFamilyName());
+        }
     }
 
     private void addPatientDetails(ORM_O01 message, Patient patientData) throws DataTypeException {
         ORM_O01_PATIENT patient = message.getPATIENT();
         PID pid = patient.getPID();
         pid.getPatientIdentifierList(0).getIDNumber().setValue(patientData.getPatientIdentifier().getIdentifier());
-        pid.getPatientName(0).getGivenName().setValue(patientData.getPatientIdentifier().getIdentifier());
-        pid.getDateTimeOfBirth().getTime().setValue(patientData.getBirthDateTime());
+        pid.getPatientName(0).getGivenName().setValue(patientData.getGivenName());
+        pid.getPatientName(0).getFamilyName().getSurname().setValue(patientData.getFamilyName());
+        pid.getDateTimeOfBirth().getTime().setValue(new SimpleDateFormat("yyyyMMdd").format(patientData.getBirthdate()));
         pid.getAdministrativeSex().setValue(patientData.getGender());
         message.getORDER().getORDER_DETAIL().getOBR().getPlannedPatientTransportComment(0).getText().setValue(patientData.getGivenName() + "," + patientData.getFamilyName());
     }
@@ -123,14 +158,18 @@ public class PacsHL7ServiceImpl implements PacsHL7Service {
     private MSH populateMessageHeader(MSH msh, Date dateTime, String messageType, String triggerEvent, String sendingFacility) throws DataTypeException {
         msh.getFieldSeparator().setValue("|");
         msh.getEncodingCharacters().setValue("^~\\&");
-        msh.getSendingFacility().getHd1_NamespaceID().setValue(sendingFacility);
-        msh.getSendingFacility().getUniversalID().setValue(sendingFacility);
-        msh.getSendingFacility().getNamespaceID().setValue(sendingFacility);
+//        msh.getSendingFacility().getHd1_NamespaceID().setValue(sendingFacility);
+//        msh.getSendingFacility().getUniversalID().setValue(sendingFacility);
+//        msh.getSendingFacility().getNamespaceID().setValue(sendingFacility);
+        msh.getSendingApplication().getNamespaceID().setValue("OpenMRS"); // Set the Sending Application
+        msh.getSendingFacility().getNamespaceID().setValue("SendingFacility"); // Set the Sending Facility
+        msh.getReceivingApplication().getNamespaceID().setValue("ReceivingApp"); // Set the Receiving Application
+        msh.getReceivingFacility().getNamespaceID().setValue("ReceivingFacility"); // Set the Receiving Facility
         msh.getDateTimeOfMessage().getTs1_Time().setValue(getHl7DateFormat().format(dateTime));
         msh.getMessageType().getMessageCode().setValue(messageType);
         msh.getMessageType().getTriggerEvent().setValue(triggerEvent);
         msh.getProcessingID().getProcessingID().setValue("P");
-        msh.getVersionID().getVersionID().setValue("2.6");
+        msh.getVersionID().getVersionID().setValue("2.5");
         return msh;
     }
 

@@ -12,6 +12,8 @@ import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v25.message.ACK;
 import ca.uhn.hl7v2.model.v25.message.ORR_O02;
 import ca.uhn.hl7v2.parser.PipeParser;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.radiology.api.exception.ModalityException;
 import org.openmrs.module.radiology.api.model.Modality;
 import org.openmrs.module.radiology.api.model.RadiologyOrder;
@@ -26,6 +28,7 @@ import java.util.Optional;
 
 @Transactional
 public class PacsIntegrationServiceImpl implements PacsIntegrationService {
+    private static final Log LOG = LogFactory.getLog(PacsIntegrationServiceImpl.class);
 
     private ModalityService modalityService;
     private PacsHL7Service pacsHL7Service;
@@ -44,6 +47,7 @@ public class PacsIntegrationServiceImpl implements PacsIntegrationService {
     }
 
     public String sendMessage(AbstractMessage message, Modality modality) throws HL7Exception, LLPException, IOException {
+        LOG.error("Inside sendMessage method "+ message);
         Message response = post(modality, message);
         String responseMessage = parseResponse(response);
         if (response instanceof ORR_O02) {
@@ -62,11 +66,26 @@ public class PacsIntegrationServiceImpl implements PacsIntegrationService {
 
     Message post(Modality modality, Message requestMessage) throws LLPException, IOException, HL7Exception {
         Connection newClientConnection = null;
+        LOG.error("\n\n\n");
+        // Create the HAPI parser
+        PipeParser parser = new PipeParser();
+
+        // Encode the message with SOH
+        String encodedMessage = parser.encode(requestMessage);
+        LOG.error("Sending HL7 Message: " + encodedMessage);
         try {
             HapiContext hapiContext = new DefaultHapiContext();
             newClientConnection = hapiContext.newClient(modality.getIp(), modality.getPort(), false);
+
             Initiator initiator = newClientConnection.getInitiator();
-            return initiator.sendAndReceive(requestMessage);
+            Message responseMessage = initiator.sendAndReceive(requestMessage);
+            LOG.error("Received HL7 Response: " + responseMessage.encode());
+
+            return responseMessage;
+        } catch (LLPException | IOException | HL7Exception e) {
+            // Handle known exceptions
+            LOG.error("Error while sending HL7 message: " + e.getMessage(), e);
+            throw e;
         } finally {
             if (newClientConnection != null) {
                 newClientConnection.close();
@@ -79,6 +98,7 @@ public class PacsIntegrationServiceImpl implements PacsIntegrationService {
     }
 
     private void processAcknowledgement(Modality modality, String responseMessage, String acknowledgmentCode) {
+        LOG.error("Inside processAcknowledgement method::: "+ responseMessage + " "+acknowledgmentCode);
         if (!AcknowledgmentCode.AA.toString().equals(acknowledgmentCode)) {
             throw new ModalityException(responseMessage, modality);
         }

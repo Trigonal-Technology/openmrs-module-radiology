@@ -7,7 +7,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.api.enums.RadiologyOrderStatus;
 import org.openmrs.module.radiology.api.model.RadiologyOrder;
 import org.openmrs.module.radiology.api.model.RadiologyOrderQueue;
-//import org.openmrs.module.radiology.api.service.PacsIntegrationService;
+import org.openmrs.module.radiology.api.service.PacsIntegrationService;
 import org.openmrs.module.radiology.api.service.RadiologyOrderQueueService;
 import org.springframework.aop.AfterReturningAdvice;
 
@@ -17,8 +17,8 @@ public class RadiologyOrderCreateAfterAdvice implements AfterReturningAdvice {
 
     private static final Log LOG = LogFactory.getLog(RadiologyOrderCreateAfterAdvice.class);
 
-//    RadiologyOrderQueueService radiologyOrderQueueService = Context.getService(RadiologyOrderQueueService.class);
-//    PacsIntegrationService pacsService = Context.getService(PacsIntegrationService.class);
+    RadiologyOrderQueueService radiologyOrderQueueService = Context.getService(RadiologyOrderQueueService.class);
+    PacsIntegrationService pacsService = Context.getService(PacsIntegrationService.class);
 
 
     @Override
@@ -33,14 +33,14 @@ public class RadiologyOrderCreateAfterAdvice implements AfterReturningAdvice {
                     RadiologyOrder radiologyOrder = (RadiologyOrder) order;
 
                     //Create a queue
-//                    RadiologyOrderQueue queue = radiologyOrderQueueService.saveOrUpdate(radiologyOrder);
+                    RadiologyOrderQueue queue = radiologyOrderQueueService.saveOrUpdate(radiologyOrder);
 
                     //Call pacs Service to send
-//                    pacsService.processOrder(radiologyOrder);
+                    pacsService.processOrder(radiologyOrder);
 
                     //Update record in radiologyQueueService with status
-//                    queue.setStatus(RadiologyOrderStatus.SENT);
-//                    radiologyOrderQueueService.saveOrUpdate(queue);
+                    queue.setStatus(RadiologyOrderStatus.SENT);
+                    radiologyOrderQueueService.saveOrUpdate(queue);
 
                     //Also update record in RadiologyOrder table
                 }
