@@ -42,8 +42,8 @@ public class PacsHL7ServiceImpl implements PacsHL7Service {
         ORC orc = message.getORDER().getORC();
         String orderNumber = order.getOrderNumber();
         validateOrderNumberSize(orderNumber);
-//        populateOrcFields(orc, order, orderNumber, Constants.NEW_ORDER);
-        populateOrcFields(orc, order, orderNumber, Constants.SCHEDULED);
+        populateOrcFields(orc, order, orderNumber, Constants.NEW_ORDER);
+//        populateOrcFields(orc, order, orderNumber, Constants.SCHEDULED);
         addOBRComponent(order, message);
         return message;
     }
@@ -81,8 +81,8 @@ public class PacsHL7ServiceImpl implements PacsHL7Service {
         orc.getPlacerOrderNumber().getEntityIdentifier().setValue(orderNumber);
         orc.getFillerOrderNumber().getEntityIdentifier().setValue(orderNumber);
         orc.getEnteredBy(0).getGivenName().setValue(Constants.SENDER);
-//        orc.getOrderStatus().setValue("IP");
-        orc.getOrderStatus().setValue("A");
+        orc.getOrderStatus().setValue("IP");
+//        orc.getOrderStatus().setValue("A");
         orc.getOrderingProvider(0).getGivenName().setValue(order.getOrderer().getName());
         orc.getOrderControl().setValue(orderControl);
     }
@@ -107,10 +107,10 @@ public class PacsHL7ServiceImpl implements PacsHL7Service {
                 .orElseThrow(() -> new HL7MessageException("Unable to create HL7 message. Missing concept source for order: " + order.getUuid()));
 
         // Set the universal service identifier with the concept code and name
-//        obr.getUniversalServiceIdentifier().getIdentifier().setValue(pacsConceptSource.getConceptReferenceTerm().getCode());
-        obr.getUniversalServiceIdentifier().getIdentifier().setValue("SHLDR-AP");
-//        obr.getUniversalServiceIdentifier().getText().setValue(pacsConceptSource.getConceptReferenceTerm().getName());
-        obr.getUniversalServiceIdentifier().getText().setValue("SHOULDER CLAVICL-AP");
+        obr.getUniversalServiceIdentifier().getIdentifier().setValue(pacsConceptSource.getConceptReferenceTerm().getCode());
+//        obr.getUniversalServiceIdentifier().getIdentifier().setValue("SHLDR-AP");
+        obr.getUniversalServiceIdentifier().getText().setValue(pacsConceptSource.getConceptReferenceTerm().getName());
+//        obr.getUniversalServiceIdentifier().getText().setValue("SHOULDER CLAVICL-AP");
 
         // Set the reason for study (comment intended for the fulfiller)
         if (order.getCommentToFulfiller() != null) {
@@ -118,10 +118,10 @@ public class PacsHL7ServiceImpl implements PacsHL7Service {
         }
 
         // Set the collector's comment to include the concept name of the radiology order
-//        if (order.getConcept().getName() != null) {
-//            obr.getCollectorSComment(0).getText().setValue(order.getConcept().getName().getName());
-        obr.getCollectorSComment(0).getText().setValue("SHOULDER CLAVICL-AP");
-//        }
+        if (order.getConcept().getName() != null) {
+            obr.getCollectorSComment(0).getText().setValue(order.getConcept().getName().getName());
+//        obr.getCollectorSComment(0).getText().setValue("SHOULDER CLAVICL-AP");
+        }
     }
 
 
