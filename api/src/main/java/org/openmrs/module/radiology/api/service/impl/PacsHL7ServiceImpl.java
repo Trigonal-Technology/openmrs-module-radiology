@@ -4,10 +4,7 @@ import ca.uhn.hl7v2.model.AbstractMessage;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v25.group.ORM_O01_PATIENT;
 import ca.uhn.hl7v2.model.v25.message.ORM_O01;
-import ca.uhn.hl7v2.model.v25.segment.MSH;
-import ca.uhn.hl7v2.model.v25.segment.OBR;
-import ca.uhn.hl7v2.model.v25.segment.ORC;
-import ca.uhn.hl7v2.model.v25.segment.PID;
+import ca.uhn.hl7v2.model.v25.segment.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.ConceptMap;
@@ -100,6 +97,13 @@ public class PacsHL7ServiceImpl implements PacsHL7Service {
     private void addOBRComponent(RadiologyOrder order, ORM_O01 message) throws DataTypeException {
         OBR obr = message.getORDER().getORDER_DETAIL().getOBR();
 
+        //Set
+//        obr.getSetIDOBR().setValue("1");
+
+        //Set modality
+        //TODO: Fetch value from concept and map it
+        obr.getDiagnosticServSectID().setValue("CT");
+
         // Retrieve the PACS concept source for the radiology order
         ConceptMap pacsConceptSource = order.getConcept().getConceptMappings().stream()
                 .filter(map -> Constants.PACS_CONCEPT_SOURCE_NAME.equals(map.getConceptReferenceTerm().getConceptSource().getName()))
@@ -119,9 +123,10 @@ public class PacsHL7ServiceImpl implements PacsHL7Service {
 
         // Set the collector's comment to include the concept name of the radiology order
         if (order.getConcept().getName() != null) {
-            obr.getCollectorSComment(0).getText().setValue(order.getConcept().getName().getName());
-//        obr.getCollectorSComment(0).getText().setValue("SHOULDER CLAVICL-AP");
+            obr.getCollectorSComment(0).getText().setValue(order.getConcept().getDisplayString());
         }
+
+        obr.getOrderingProvider(0).getGivenName().setValue(order.getOrderer().getName());
     }
 
 
@@ -155,6 +160,13 @@ public class PacsHL7ServiceImpl implements PacsHL7Service {
         return new SimpleDateFormat("yyyyMMddHH");
     }
 
+//    private PV1 populatePatientVisit() {
+//        // Populate PV1 (Patient Visit) segment
+//        PV1 pv1 = message.getPATIENT().getVISIT().getPV1();
+//        pv1.getPatientClass().setValue("O");
+//        pv1.getAssignedPatientLocation().getPointOfCare().setValue("RADIOLOGY");
+//    }
+
     private MSH populateMessageHeader(MSH msh, Date dateTime, String messageType, String triggerEvent, String sendingFacility) throws DataTypeException {
         msh.getFieldSeparator().setValue("|");
         msh.getEncodingCharacters().setValue("^~\\&");
@@ -162,9 +174,9 @@ public class PacsHL7ServiceImpl implements PacsHL7Service {
 //        msh.getSendingFacility().getUniversalID().setValue(sendingFacility);
 //        msh.getSendingFacility().getNamespaceID().setValue(sendingFacility);
         msh.getSendingApplication().getNamespaceID().setValue("OpenMRS"); // Set the Sending Application
-        msh.getSendingFacility().getNamespaceID().setValue("SendingFacility"); // Set the Sending Facility
-        msh.getReceivingApplication().getNamespaceID().setValue("ReceivingApp"); // Set the Receiving Application
-        msh.getReceivingFacility().getNamespaceID().setValue("ReceivingFacility"); // Set the Receiving Facility
+        msh.getSendingFacility().getNamespaceID().setValue("Hospital"); // Set the Sending Facility
+        msh.getReceivingApplication().getNamespaceID().setValue("PACS"); // Set the Receiving Application
+        msh.getReceivingFacility().getNamespaceID().setValue("IMAGING"); // Set the Receiving Facility
         msh.getDateTimeOfMessage().getTs1_Time().setValue(getHl7DateFormat().format(dateTime));
         msh.getMessageType().getMessageCode().setValue(messageType);
         msh.getMessageType().getTriggerEvent().setValue(triggerEvent);

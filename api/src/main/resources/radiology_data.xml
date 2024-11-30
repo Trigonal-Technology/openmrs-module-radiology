@@ -212,4 +212,164 @@
     </changeSet>
 
 
+    <!--Add radiology modality -->
+    <changeSet id="radiology-202411301700" author="dipakthapa">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM concept WHERE uuid = 'b3e41c6b-3c8c-49b4-b0df-6765b3d8e227'
+            </sqlCheck>
+        </preConditions>
+        <comment>Create Radiology Modality concept</comment>
+
+        <!-- Insert concept for Radiology Modality -->
+        <insert tableName="concept">
+            <column name="datatype_id" valueNumeric="2"/> <!-- 2 is Coded datatype -->
+            <column name="class_id" valueNumeric="7"/> <!-- 7 is Misc class -->
+            <column name="is_set" valueBoolean="true"/>
+            <column name="retired" valueBoolean="false"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="version" value=""/>
+            <column name="uuid" value="b3e41c6b-3c8c-49b4-b0df-6765b3d8e227"/>
+        </insert>
+
+        <!-- Insert concept name for Radiology Modality -->
+        <insert tableName="concept_name">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = 'b3e41c6b-3c8c-49b4-b0df-6765b3d8e227')"/>
+            <column name="name" value="Radiology Modality"/>
+            <column name="locale" value="en"/>
+            <column name="locale_preferred" valueBoolean="true"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="concept_name_type" value="FULLY_SPECIFIED"/>
+            <column name="voided" valueBoolean="false"/>
+            <column name="uuid" value="f5c192ea-072b-4239-b22d-8671d4d5d213"/>
+        </insert>
+
+        <!-- Insert concept description for Radiology Modality -->
+        <insert tableName="concept_description">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = 'b3e41c6b-3c8c-49b4-b0df-6765b3d8e227')"/>
+            <column name="description" value="Modality or type of radiology imaging procedure"/>
+            <column name="locale" value="en"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="uuid" value="1a9d6e88-3f46-474f-852e-d934aa36f5ea"/>
+        </insert>
+    </changeSet>
+
+    <!-- Insert CT-scan into modality -->
+    <changeSet id="radiology-202411301800" author="dipakthapa">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM concept WHERE uuid = 'e24f4f82-7fa3-4db8-b8a9-cb63425a489b'
+            </sqlCheck>
+        </preConditions>
+        <comment>Create CT-Scan concept as a set member of Radiology Modality</comment>
+
+        <!-- Insert CT-Scan concept -->
+        <insert tableName="concept">
+            <column name="datatype_id" valueNumeric="2"/> <!-- 2 is Coded datatype -->
+            <column name="class_id" valueNumeric="7"/> <!-- 7 is Misc class -->
+            <column name="is_set" valueBoolean="false"/>
+            <column name="retired" valueBoolean="false"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="version" value=""/>
+            <column name="uuid" value="e24f4f82-7fa3-4db8-b8a9-cb63425a489b"/>
+        </insert>
+
+        <!-- Insert CT-Scan concept name -->
+        <insert tableName="concept_name">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = 'e24f4f82-7fa3-4db8-b8a9-cb63425a489b')"/>
+            <column name="name" value="CT-Scan"/>
+            <column name="locale" value="en"/>
+            <column name="locale_preferred" valueBoolean="true"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="concept_name_type" value="FULLY_SPECIFIED"/>
+            <column name="voided" valueBoolean="false"/>
+            <column name="uuid" value="9cbecf68-3c94-451b-9e0d-1ac40dc3e6ed"/>
+        </insert>
+
+        <!-- Insert CT-Scan short name -->
+        <insert tableName="concept_name">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = 'e24f4f82-7fa3-4db8-b8a9-cb63425a489b')"/>
+            <column name="name" value="CT"/>
+            <column name="locale" value="en"/>
+            <column name="locale_preferred" valueBoolean="false"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="concept_name_type" value="SHORT"/>
+            <column name="voided" valueBoolean="false"/>
+            <column name="uuid" value="2c52b1bc-ec3e-4b38-9c5e-67691c8b3efb"/>
+        </insert>
+
+        <!-- Link CT-Scan as a set member of Radiology Modality -->
+        <insert tableName="concept_set">
+            <column name="concept_set" valueComputed="(SELECT concept_id FROM concept WHERE uuid = 'b3e41c6b-3c8c-49b4-b0df-6765b3d8e227')"/>
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = 'e24f4f82-7fa3-4db8-b8a9-cb63425a489b')"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="uuid" value="d64b3b1e-ff8e-4a5d-a6c2-5dc752bc44f1"/>
+        </insert>
+    </changeSet>
+
+    <!-- Radiographic Imaging-->
+    <changeSet id="radiology-202411301900" author="dipakthapa">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM concept WHERE uuid = 'd7e4f3b6-8c2d-46d8-b917-a2b376a1e451'
+            </sqlCheck>
+        </preConditions>
+        <comment>Create Radiographic Imaging concept as a set member of Radiology Modality</comment>
+
+        <!-- Insert Radiographic Imaging concept -->
+        <insert tableName="concept">
+            <column name="datatype_id" valueNumeric="2"/> <!-- 2 is Coded datatype -->
+            <column name="class_id" valueNumeric="7"/> <!-- 7 is Misc class -->
+            <column name="is_set" valueBoolean="false"/>
+            <column name="retired" valueBoolean="false"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="version" value=""/>
+            <column name="uuid" value="d7e4f3b6-8c2d-46d8-b917-a2b376a1e451"/>
+        </insert>
+
+        <!-- Insert Radiographic Imaging concept name -->
+        <insert tableName="concept_name">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = 'd7e4f3b6-8c2d-46d8-b917-a2b376a1e451')"/>
+            <column name="name" value="Radiographic Imaging"/>
+            <column name="locale" value="en"/>
+            <column name="locale_preferred" valueBoolean="true"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="concept_name_type" value="FULLY_SPECIFIED"/>
+            <column name="voided" valueBoolean="false"/>
+            <column name="uuid" value="5a16c0b7-d0ea-4e37-9e61-e25368f56b3c"/>
+        </insert>
+
+        <!-- Insert Radiographic Imaging short name -->
+        <insert tableName="concept_name">
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = 'd7e4f3b6-8c2d-46d8-b917-a2b376a1e451')"/>
+            <column name="name" value="RG"/>
+            <column name="locale" value="en"/>
+            <column name="locale_preferred" valueBoolean="false"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="concept_name_type" value="SHORT"/>
+            <column name="voided" valueBoolean="false"/>
+            <column name="uuid" value="9a746d43-fb0e-44a2-9675-fc0249d50376"/>
+        </insert>
+
+        <!-- Link Radiographic Imaging as a set member of Radiology Modality -->
+        <insert tableName="concept_set">
+            <column name="concept_set" valueComputed="(SELECT concept_id FROM concept WHERE uuid = 'b3e41c6b-3c8c-49b4-b0df-6765b3d8e227')"/>
+            <column name="concept_id" valueComputed="(SELECT concept_id FROM concept WHERE uuid = 'd7e4f3b6-8c2d-46d8-b917-a2b376a1e451')"/>
+            <column name="creator" valueNumeric="1"/>
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="uuid" value="d5e1b4e1-cde9-4fc1-a1f9-62b84f5e8b1d"/>
+        </insert>
+
+    </changeSet>
+
 </databaseChangeLog>

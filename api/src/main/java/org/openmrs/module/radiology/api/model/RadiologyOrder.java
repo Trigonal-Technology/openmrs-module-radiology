@@ -14,6 +14,8 @@ public class RadiologyOrder extends ServiceOrder {
 
 	private Concept bodySite;
 
+	private Concept modality;
+
 	private RadiologyOrder relatedRadiologyOrder;
 
 	private RadiologyOrderStatus radiologyStatus;
@@ -93,4 +95,12 @@ public class RadiologyOrder extends ServiceOrder {
 	public void setRadiologyStatus(RadiologyOrderStatus radiologyStatus) {
 		this.radiologyStatus = radiologyStatus;
 	}
+
+    public Concept getModality() {
+        return modality;
+    }
+
+    public void setModality(Concept modality) {
+        this.modality = modality;
+    }
 }

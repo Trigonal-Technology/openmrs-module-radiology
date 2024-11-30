@@ -77,6 +77,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 			d.addProperty("numberOfRepeats");
 			d.addProperty("specimenType", Representation.REF);
 			d.addProperty("bodySite", Representation.REF);
+			d.addProperty("modality", Representation.REF);
 			d.addProperty("radiologyStatus");
 			d.addProperty("relatedRadiologyOrder", Representation.REF);
 			return d;
@@ -91,6 +92,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 			d.addProperty("numberOfRepeats");
 			d.addProperty("specimenType", Representation.FULL);
 			d.addProperty("bodySite", Representation.FULL);
+			d.addProperty("modality", Representation.FULL);
 			d.addProperty("radiologyStatus");
 			d.addProperty("relatedRadiologyOrder", Representation.FULL);
 			return d;
@@ -113,6 +115,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 		d.addProperty("numberOfRepeats");
 		d.addProperty("orderType");
 		d.addProperty("bodySite");
+		d.addProperty("modality");
 		d.addProperty("specimenType");
 		d.addProperty("radiologyStatus");
 		d.addProperty("commentToFulfiller");

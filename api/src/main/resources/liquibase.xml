@@ -186,4 +186,29 @@
         </insert>
     </changeSet>
 
+    <changeSet id="radiology-202411301245" author="dipakthapa">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="radiology_order" columnName="modality"/>
+            </not>
+        </preConditions>
+        <comment>Add modality column to radiology_order table</comment>
+
+        <!-- Add modality column -->
+        <addColumn tableName="radiology_order">
+            <column name="modality" type="int" defaultValue="1"/>
+        </addColumn>
+
+        <update tableName="radiology_order">
+            <column name="modality" value="1"/>
+        </update>
+
+        <modifyDataType tableName="radiology_order" columnName="modality" newDataType="int not null"/>
+
+        <!-- Add foreign key constraint for modality -->
+        <addForeignKeyConstraint constraintName="radiology_order_modality_fk"
+                                 baseTableName="radiology_order" baseColumnNames="modality"
+                                 referencedTableName="concept" referencedColumnNames="concept_id"/>
+    </changeSet>
+
 </databaseChangeLog>
