@@ -11,6 +11,7 @@ import org.openmrs.ConceptMap;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.api.constants.Constants;
 import org.openmrs.module.radiology.api.exception.HL7MessageException;
 import org.openmrs.module.radiology.api.model.RadiologyOrder;
@@ -101,8 +102,7 @@ public class PacsHL7ServiceImpl implements PacsHL7Service {
 //        obr.getSetIDOBR().setValue("1");
 
         //Set modality
-        //TODO: Fetch value from concept and map it
-        obr.getDiagnosticServSectID().setValue("CT");
+        obr.getDiagnosticServSectID().setValue(order.getModality().getShortNameInLocale(Context.getLocale()).getName());
 
         // Retrieve the PACS concept source for the radiology order
         ConceptMap pacsConceptSource = order.getConcept().getConceptMappings().stream()

@@ -152,6 +152,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 		        .getResourceBySupportedClass(Order.class);
 		ModelImpl orderModel = (ModelImpl) orderResource.getCREATEModel(rep);
 		return orderModel.property("specimenSource", new StringProperty().example("uuid"))
+				.property("modality", new StringProperty().example("uuid"))
 		        .property("laterality", new EnumProperty(RadiologyOrder.Laterality.class))
 				.property("radiologyStatus", new EnumProperty(RadiologyOrderStatus.PENDING.getClass()))
 		        .property("clinicalHistory", new StringProperty())
