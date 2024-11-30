@@ -22,6 +22,10 @@
     <context:annotation-config/>
     <context:component-scan base-package="org.openmrs.module.radiology.api" />
 
+    <bean id="orderService" class="org.openmrs.module.radiology.api.service.impl.RadiologyOrderServiceImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
     <!--DAO Beans -->
     <bean id="radiologyOrderQueueDao" class="org.openmrs.module.radiology.api.dao.impl.RadiologyOrderQueueDaoImpl">
         <property name="sessionFactory">

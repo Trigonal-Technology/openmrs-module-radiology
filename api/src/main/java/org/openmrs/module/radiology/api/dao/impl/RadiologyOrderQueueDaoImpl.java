@@ -45,6 +45,16 @@ public class RadiologyOrderQueueDaoImpl implements RadiologyOrderQueueDao {
 	@Override
 	public RadiologyOrderQueue saveOrUpdate(RadiologyOrderQueue queue) {
 		LOGGER.info("Inside saveOrUpdate");
+		if (getCurrentSession() == null) {
+			LOGGER.error("getCurrent session is null");
+		}
+		if (queue == null) {
+			LOGGER.error("Queue object is null");
+		}
+
+		if (queue.getRadiologyOrderId() == null) {
+			LOGGER.error("Queue object > radiology order id is null");
+		}
 		getCurrentSession().saveOrUpdate(queue);
 		return queue;
 	}

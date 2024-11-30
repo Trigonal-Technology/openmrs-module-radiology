@@ -106,11 +106,13 @@ public class PacsIntegrationServiceImpl implements PacsIntegrationService {
 
     @Override
     public void processOrder(RadiologyOrder radiologyOrder) throws HL7Exception, LLPException, IOException {
-        AbstractMessage request = pacsHL7Service.createMessage(radiologyOrder);
+        LOG.error("Inside processOrder method ");
         Optional<Modality> modalityRecord = modalityService.getByOrderTypeId(radiologyOrder.getOrderType().getOrderTypeId());
         if (!modalityRecord.isPresent()) {
-            throw new ModalityException("No modality record found.", null);
+//            throw new ModalityException("No modality record found.", null);
+            return;
         }
+        AbstractMessage request = pacsHL7Service.createMessage(radiologyOrder);
         String response = sendMessage(request, modalityRecord.get());
 
         orderLogService.save(radiologyOrder, request.encode(), response, modalityRecord.get());

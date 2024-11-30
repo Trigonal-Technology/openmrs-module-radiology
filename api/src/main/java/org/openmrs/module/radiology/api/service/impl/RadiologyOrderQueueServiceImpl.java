@@ -9,9 +9,11 @@ import org.openmrs.module.radiology.api.model.RadiologyOrder;
 import org.openmrs.module.radiology.api.model.RadiologyOrderQueue;
 import org.openmrs.module.radiology.api.service.RadiologyOrderQueueService;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 public class RadiologyOrderQueueServiceImpl implements RadiologyOrderQueueService {
     private static final Log LOG = LogFactory.getLog(RadiologyOrderQueueServiceImpl.class);
 
