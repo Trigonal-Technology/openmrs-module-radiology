@@ -76,8 +76,11 @@ public class PacsHL7ServiceImpl implements PacsHL7Service {
 
     private void populateOrcFields(ORC orc, RadiologyOrder order, String orderNumber, String orderControl) throws DataTypeException {
         orc.getQuantityTiming(0).getPriority().setValue(order.getUrgency().name());
+
         orc.getPlacerOrderNumber().getEntityIdentifier().setValue(orderNumber);
         orc.getFillerOrderNumber().getEntityIdentifier().setValue(orderNumber);
+
+
         orc.getEnteredBy(0).getGivenName().setValue(Constants.SENDER);
         orc.getOrderStatus().setValue("IP");
 //        orc.getOrderStatus().setValue("A");
@@ -103,6 +106,12 @@ public class PacsHL7ServiceImpl implements PacsHL7Service {
 
         //Set modality
         obr.getDiagnosticServSectID().setValue(order.getModality().getShortNameInLocale(Context.getLocale()).getName());
+
+        obr.getPlacerOrderNumber().getEntityIdentifier().setValue(order.getOrderNumber());
+        obr.getFillerOrderNumber().getEntityIdentifier().setValue(order.getOrderNumber());
+
+        obr.getObr18_PlacerField1().setValue(order.getOrderNumber());
+        obr.getObr19_PlacerField2().setValue(order.getOrderNumber());
 
         // Retrieve the PACS concept source for the radiology order
         ConceptMap pacsConceptSource = order.getConcept().getConceptMappings().stream()
