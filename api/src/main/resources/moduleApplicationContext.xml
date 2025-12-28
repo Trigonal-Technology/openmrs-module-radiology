@@ -27,12 +27,6 @@
     </bean>
 
     <!--DAO Beans -->
-    <bean id="radiologyOrderQueueDao" class="org.openmrs.module.radiology.api.dao.impl.RadiologyOrderQueueDaoImpl">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory"/>
-        </property>
-    </bean>
-
     <bean id="modalityDao" class="org.openmrs.module.radiology.api.dao.impl.ModalityDaoImpl">
         <property name="sessionFactory">
             <ref bean="sessionFactory"/>
@@ -45,18 +39,13 @@
         </property>
     </bean>
 
-<!--    &lt;!&ndash;Service Beans &ndash;&gt;-->
-    <bean id="radiologyOrderQueueService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="target">
-            <bean class="org.openmrs.module.radiology.api.service.impl.RadiologyOrderQueueServiceImpl">
-                <property name="radiologyOrderQueueDao" ref="radiologyOrderQueueDao"/>
-            </bean>
+    <bean id="radiologyReportDao" class="org.openmrs.module.radiology.api.dao.impl.RadiologyReportDaoImpl">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
         </property>
-        <property name="preInterceptors" ref="serviceInterceptors"/>
-        <property name="transactionAttributeSource" ref="transactionAttributeSource"/>
     </bean>
 
+<!--    &lt;!&ndash;Service Beans &ndash;&gt;-->
     <bean id="modalityService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target">
@@ -101,16 +90,18 @@
         <property name="transactionAttributeSource" ref="transactionAttributeSource"/>
     </bean>
 
-<!--    Register service beans to context-->
-    <bean parent="serviceContext">
-        <property name="moduleService">
-            <list>
-                <value>org.openmrs.module.radiology.api.service.RadiologyOrderQueueService</value>
-                <ref bean="radiologyOrderQueueService"/>
-            </list>
+    <bean id="radiologyReportService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="target">
+            <bean class="org.openmrs.module.radiology.api.service.impl.RadiologyReportServiceImpl">
+                <property name="radiologyReportDao" ref="radiologyReportDao"/>
+            </bean>
         </property>
+        <property name="preInterceptors" ref="serviceInterceptors"/>
+        <property name="transactionAttributeSource" ref="transactionAttributeSource"/>
     </bean>
 
+<!--    Register service beans to context-->
     <bean parent="serviceContext">
         <property name="moduleService">
             <list>
@@ -125,6 +116,15 @@
             <list>
                 <value>org.openmrs.module.radiology.api.service.PacsIntegrationService</value>
                 <ref bean="pacsIntegrationService"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list>
+                <value>org.openmrs.module.radiology.api.service.RadiologyReportService</value>
+                <ref bean="radiologyReportService"/>
             </list>
         </property>
     </bean>

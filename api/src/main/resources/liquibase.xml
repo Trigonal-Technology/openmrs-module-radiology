@@ -22,7 +22,7 @@
             </column>
             <column name="body_site" type="int"/>
             <column name="specimen_source" type="int"/>
-            <column name="specimen_type" type="int"/>
+            <column name="study_uuid" type="varchar(255)"/>
             <column name="laterality" type="varchar(20)"/>
             <column name="clinical_history" type="text"/>
             <column name="frequency" type="int"/>
@@ -41,9 +41,6 @@
         <addForeignKeyConstraint constraintName="radiology_order_specimen_source_fk"
                                  baseTableName="radiology_order" baseColumnNames="specimen_source"
                                  referencedTableName="concept" referencedColumnNames="concept_id"/>
-        <addForeignKeyConstraint constraintName="radiology_order_specimen_type_fk"
-                                 baseTableName="radiology_order" baseColumnNames="specimen_type"
-                                 referencedTableName="concept" referencedColumnNames="concept_id"/>
         <addForeignKeyConstraint constraintName="radiology_order_frequency_fk"
                                  baseTableName="radiology_order" baseColumnNames="frequency"
                                  referencedTableName="order_frequency" referencedColumnNames="order_frequency_id"/>
@@ -58,6 +55,32 @@
         </createIndex>
         <createIndex indexName="radiology_order_specimen_source_index" tableName="radiology_order">
             <column name="specimen_source"/>
+        </createIndex>
+        <createIndex indexName="radiology_order_study_uuid_index" tableName="radiology_order">
+            <column name="study_uuid"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="radiology-202501020000" author="dipakthapa">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="radiology_order" columnName="specimen_type"/>
+        </preConditions>
+        <comment>Remove specimen_type column and add study_uuid column</comment>
+        
+        <!-- Drop foreign key constraint for specimen_type -->
+        <dropForeignKeyConstraint baseTableName="radiology_order" constraintName="radiology_order_specimen_type_fk"/>
+        
+        <!-- Drop specimen_type column -->
+        <dropColumn tableName="radiology_order" columnName="specimen_type"/>
+        
+        <!-- Add study_uuid column -->
+        <addColumn tableName="radiology_order">
+            <column name="study_uuid" type="varchar(255)"/>
+        </addColumn>
+        
+        <!-- Create index for study_uuid -->
+        <createIndex indexName="radiology_order_study_uuid_index" tableName="radiology_order">
+            <column name="study_uuid"/>
         </createIndex>
     </changeSet>
 
@@ -78,45 +101,6 @@
     </changeSet>
 
     <include file="radiology_data.xml"/>
-
-    <changeSet id="radiology-202410252100" author="dipakthapa">
-        <comment>Create Radiology Order Queue</comment>
-        <createTable tableName="radiology_order_queue">
-            <column name="id" type="int" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="radiology_order_id" type="int">
-                <constraints nullable="false"/>
-            </column>
-            <column name="status" type="varchar(20)" defaultValue="PENDING">
-                <constraints nullable="false"/>
-            </column>
-            <column name="urgency" type="varchar(10)" defaultValue="ROUTINE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="creator" type="int">
-                <constraints nullable="false"/>
-            </column>
-            <column name="date_created" type="datetime">
-                <constraints nullable="false"/>
-            </column>
-            <column name="changed_by" type="int"/>
-            <column name="date_changed" type="datetime"/>
-            <column name="voided" type="boolean" defaultValueBoolean="false">
-                <constraints nullable="false"/>
-            </column>
-            <column name="voided_by" type="int"/>
-            <column name="date_voided" type="datetime"/>
-            <column name="void_reason" type="varchar(255)"/>
-            <column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
-        </createTable>
-        
-        <addForeignKeyConstraint baseTableName="radiology_order_queue"
-                                baseColumnNames="radiology_order_id"
-                                referencedTableName="radiology_order"
-                                referencedColumnNames="order_id"
-                                constraintName="fk_radiology_order"/>
-    </changeSet>
 
     <changeSet id="radiology-202411011000" author="dipakthapa">
         <comment>Create Modality Table</comment>
@@ -209,6 +193,95 @@
         <addForeignKeyConstraint constraintName="radiology_order_modality_fk"
                                  baseTableName="radiology_order" baseColumnNames="modality"
                                  referencedTableName="concept" referencedColumnNames="concept_id"/>
+    </changeSet>
+
+    <changeSet id="radiology-202501010000" author="dipakthapa">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="radiology_report"/>
+            </not>
+        </preConditions>
+        <comment>Create Radiology Report Table</comment>
+        <createTable tableName="radiology_report">
+            <column name="radiology_report_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="radiology_order_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patient_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="encounter_id" type="int"/>
+            <column name="concept_id" type="int"/>
+            <column name="performer_id" type="int"/>
+            <column name="location_id" type="int"/>
+            <column name="modality" type="int"/>
+            <column name="report" type="text"/>
+            <column name="findings" type="text"/>
+            <column name="impressions" type="text"/>
+            <column name="recommendations" type="text"/>
+            <column name="status" type="varchar(20)"/>
+            <column name="report_datetime" type="datetime"/>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="creator" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+            <column name="voided" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="voided_by" type="int"/>
+            <column name="date_voided" type="datetime"/>
+            <column name="void_reason" type="varchar(255)"/>
+            <column name="form_namespace_and_path" type="VARCHAR(255)"/>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="radiology_report_order_id_fk"
+                                 baseTableName="radiology_report" baseColumnNames="radiology_order_id"
+                                 referencedTableName="radiology_order" referencedColumnNames="order_id"/>
+        <addForeignKeyConstraint constraintName="radiology_report_patient_id_fk"
+                                 baseTableName="radiology_report" baseColumnNames="patient_id"
+                                 referencedTableName="patient" referencedColumnNames="patient_id"/>
+        <addForeignKeyConstraint constraintName="radiology_report_encounter_id_fk"
+                                 baseTableName="radiology_report" baseColumnNames="encounter_id"
+                                 referencedTableName="encounter" referencedColumnNames="encounter_id"/>
+        <addForeignKeyConstraint constraintName="radiology_report_concept_id_fk"
+                                 baseTableName="radiology_report" baseColumnNames="concept_id"
+                                 referencedTableName="concept" referencedColumnNames="concept_id"/>
+        <addForeignKeyConstraint constraintName="radiology_report_performer_id_fk"
+                                 baseTableName="radiology_report" baseColumnNames="performer_id"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="radiology_report_location_id_fk"
+                                 baseTableName="radiology_report" baseColumnNames="location_id"
+                                 referencedTableName="location" referencedColumnNames="location_id"/>
+        <addForeignKeyConstraint constraintName="radiology_report_modality_fk"
+                                 baseTableName="radiology_report" baseColumnNames="modality"
+                                 referencedTableName="concept" referencedColumnNames="concept_id"/>
+        <addForeignKeyConstraint constraintName="radiology_report_creator_fk"
+                                 baseTableName="radiology_report" baseColumnNames="creator"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="radiology_report_changed_by_fk"
+                                 baseTableName="radiology_report" baseColumnNames="changed_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="radiology_report_voided_by_fk"
+                                 baseTableName="radiology_report" baseColumnNames="voided_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <createIndex indexName="radiology_report_order_id_index" tableName="radiology_report">
+            <column name="radiology_order_id"/>
+        </createIndex>
+        <createIndex indexName="radiology_report_patient_id_index" tableName="radiology_report">
+            <column name="patient_id"/>
+        </createIndex>
+        <createIndex indexName="radiology_report_status_index" tableName="radiology_report">
+            <column name="status"/>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>

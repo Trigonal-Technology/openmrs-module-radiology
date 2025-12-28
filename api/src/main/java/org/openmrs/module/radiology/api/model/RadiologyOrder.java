@@ -5,20 +5,23 @@ import org.openmrs.ServiceOrder;
 import org.openmrs.module.radiology.api.enums.RadiologyOrderStatus;
 
 import javax.persistence.PrePersist;
+import java.util.Set;
 
 public class RadiologyOrder extends ServiceOrder {
 
 	private static final long serialVersionUID = 1L;
 
-	private Concept specimenType;
-
 	private Concept bodySite;
 
 	private Concept modality;
 
+	private String studyUuid;
+
 	private RadiologyOrder relatedRadiologyOrder;
 
 	private RadiologyOrderStatus radiologyStatus;
+
+	private Set<RadiologyReport> reports;
 
 	public RadiologyOrder() {
 	}
@@ -64,14 +67,6 @@ public class RadiologyOrder extends ServiceOrder {
 		return newOrder;
 	}
 
-	public Concept getSpecimenType() {
-		return specimenType;
-	}
-
-	public void setSpecimenType(Concept specimenType) {
-		this.specimenType = specimenType;
-	}
-
 	public Concept getBodySite() {
 		return bodySite;
 	}
@@ -103,4 +98,20 @@ public class RadiologyOrder extends ServiceOrder {
     public void setModality(Concept modality) {
         this.modality = modality;
     }
+
+	public String getStudyUuid() {
+		return studyUuid;
+	}
+
+	public void setStudyUuid(String studyUuid) {
+		this.studyUuid = studyUuid;
+	}
+
+	public Set<RadiologyReport> getReports() {
+		return reports;
+	}
+
+	public void setReports(Set<RadiologyReport> reports) {
+		this.reports = reports;
+	}
 }

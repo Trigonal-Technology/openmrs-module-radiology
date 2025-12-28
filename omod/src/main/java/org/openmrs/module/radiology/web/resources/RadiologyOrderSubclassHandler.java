@@ -75,11 +75,12 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 			d.addProperty("clinicalHistory");
 			d.addProperty("frequency", Representation.REF);
 			d.addProperty("numberOfRepeats");
-			d.addProperty("specimenType", Representation.REF);
 			d.addProperty("bodySite", Representation.REF);
 			d.addProperty("modality", Representation.REF);
+			d.addProperty("studyUuid");
 			d.addProperty("radiologyStatus");
 			d.addProperty("relatedRadiologyOrder", Representation.REF);
+			d.addProperty("reports", Representation.REF);
 			return d;
 		} else if (rep instanceof FullRepresentation) {
 			OrderResource2_5 orderResource = (OrderResource2_5) Context.getService(RestService.class)
@@ -90,11 +91,12 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 			d.addProperty("clinicalHistory");
 			d.addProperty("frequency", Representation.DEFAULT);
 			d.addProperty("numberOfRepeats");
-			d.addProperty("specimenType", Representation.FULL);
 			d.addProperty("bodySite", Representation.FULL);
 			d.addProperty("modality", Representation.FULL);
+			d.addProperty("studyUuid");
 			d.addProperty("radiologyStatus");
 			d.addProperty("relatedRadiologyOrder", Representation.FULL);
+			d.addProperty("reports", Representation.DEFAULT);
 			return d;
 		} else if (rep instanceof CustomRepresentation) { // custom rep
 			return null;
@@ -116,7 +118,7 @@ public class RadiologyOrderSubclassHandler extends BaseDelegatingSubclassHandler
 		d.addProperty("orderType");
 		d.addProperty("bodySite");
 		d.addProperty("modality");
-		d.addProperty("specimenType");
+		d.addProperty("studyUuid");
 		d.addProperty("radiologyStatus");
 		d.addProperty("commentToFulfiller");
 		d.addProperty("scheduledDate");

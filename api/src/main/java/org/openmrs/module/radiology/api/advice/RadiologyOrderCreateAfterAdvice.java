@@ -3,12 +3,10 @@ package org.openmrs.module.radiology.api.advice;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Order;
+import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.api.enums.RadiologyOrderStatus;
 import org.openmrs.module.radiology.api.model.RadiologyOrder;
-import org.openmrs.module.radiology.api.model.RadiologyOrderQueue;
 import org.openmrs.module.radiology.api.service.PacsIntegrationService;
-import org.openmrs.module.radiology.api.service.RadiologyOrderQueueService;
 import org.springframework.aop.AfterReturningAdvice;
 
 import java.lang.reflect.Method;
@@ -17,7 +15,6 @@ public class RadiologyOrderCreateAfterAdvice implements AfterReturningAdvice {
 
     private static final Log LOG = LogFactory.getLog(RadiologyOrderCreateAfterAdvice.class);
 
-    RadiologyOrderQueueService radiologyOrderQueueService = Context.getService(RadiologyOrderQueueService.class);
     PacsIntegrationService pacsService = Context.getService(PacsIntegrationService.class);
 
 
@@ -32,17 +29,18 @@ public class RadiologyOrderCreateAfterAdvice implements AfterReturningAdvice {
                 if (order instanceof RadiologyOrder) {
                     RadiologyOrder radiologyOrder = (RadiologyOrder) order;
 
-                    //Create a queue
-                    RadiologyOrderQueue queue = radiologyOrderQueueService.saveOrUpdate(radiologyOrder);
+                    //Check if PACS integration is enabled
+                    AdministrationService adminService = Context.getAdministrationService();
+                    String enablePacsIntegration = adminService.getGlobalProperty("radiology.enablePacsIntegration", "true");
 
-                    //Call pacs Service to send
-                    pacsService.processOrder(radiologyOrder);
-
-                    //Update record in radiologyQueueService with status
-                    queue.setStatus(RadiologyOrderStatus.SENT);
-                    radiologyOrderQueueService.saveOrUpdate(queue);
-
-                    //Also update record in RadiologyOrder table
+                    if (Boolean.parseBoolean(enablePacsIntegration)) {
+                        //Call pacs Service to send
+                        pacsService.processOrder(radiologyOrder);
+                        LOG.info("PACS integration enabled - sent order to modality");
+                    } else {
+                        // Skip PACS integration - middleware will handle it
+                        LOG.info("PACS integration disabled - middleware will handle modality requests");
+                    }
                 }
 
             }

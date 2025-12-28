@@ -20,6 +20,12 @@
 		<require_module>org.openmrs.module.webservices.rest</require_module>
 	</require_modules>
 
+	<globalProperty>
+		<property>radiology.enablePacsIntegration</property>
+		<defaultValue>true</defaultValue>
+		<description>Enable/disable direct PACS integration. When disabled, middleware handles modality requests instead of OpenMRS.</description>
+	</globalProperty>
+
 	<advice>
 		<point>org.openmrs.api.OrderService</point>
 		<class>${project.parent.groupId}.${project.parent.artifactId}.api.advice.RadiologyOrderCreateBeforeAdvice</class>
