@@ -23,6 +23,7 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Resource(name = RestConstants.VERSION_1 + "/radiology", supportedClass = RadiologyReport.class, supportedOpenmrsVersions = {
@@ -67,8 +68,12 @@ public class RadiologyReportResource extends DataDelegatingCrudResource<Radiolog
 
 	@Override
 	protected PageableResult doSearch(RequestContext requestContext) {
-		// Search functionality can be enhanced later with orderUuid and patientUuid filters
-		// For now, return empty results
+		String orderUuid = requestContext.getParameter("orderUuid");
+		if (orderUuid != null) {
+			List<RadiologyReport> reports = radiologyReportService.getReportsByOrderUuid(orderUuid);
+			return new NeedsPaging<>(reports, requestContext);
+		}
+		// Return empty results for now - listing all reports without filters is not supported
 		return new NeedsPaging<>(new ArrayList<>(), requestContext);
 	}
 
